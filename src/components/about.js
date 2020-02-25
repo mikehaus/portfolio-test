@@ -24,7 +24,7 @@ class AboutView extends React.Component {
 
         return (
             <div style={ABOUT_STYLES.main}>
-                <h1>Hello</h1>
+                <h1>Hi! I'm Mike!</h1>
             </div>
         );
     }

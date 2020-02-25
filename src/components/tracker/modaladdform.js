@@ -3,13 +3,8 @@ import { Form, FormGroup, FormControl, ControlLabel, HelpBlock, Modal, Button, S
  
 const { ArrayType, StringType, NumberType } = Schema.Types;
 const model = Schema.Model({
-  skills: ArrayType()
-    .minLength(2, 'Please select at least 2 types of Skills.')
-    .isRequired('This field is required.'),
-  status: ArrayType()
-    .minLength(2, 'Please select at least 2 types of Status.')
-    .isRequired('This field is required.'),
-  level: NumberType().min(5, 'This field must be greater than 5')
+  name: StringType().isRequired('This field is required.'),
+  description: StringType().isRequired('Please input a description for your ticket')
 });
 
 class CustomField extends React.PureComponent {
@@ -59,6 +54,7 @@ class ModalAddForm extends React.Component {
           return;
         }
         Alert.success('Success');
+        this.props.close();
       }
 
       close() {
@@ -112,20 +108,20 @@ class ModalAddForm extends React.Component {
                     <Radio value={'Medium'}>Medium</Radio>
                     <Radio value={'High'}>High</Radio>
                 </CustomField>
-
-
-                <FormGroup>
-                    <Button appearance="primary" onClick={this.handleSubmit}>
-                    Submit
-                    </Button>
-                </FormGroup>
+                <CustomField
+                    name="description"
+                    label="Description"
+                    componentClass="textarea"
+                    rows={5}
+                    error={formError.priority}
+                />
                 </Form>
               </Modal.Body>
               <Modal.Footer>
-                <Button onClick={this.close} appearance="primary">
-                  Confirm
+                <Button onClick={this.handleSubmit} appearance="primary" color="green">
+                  Submit
                 </Button>
-                <Button onClick={this.props.close} appearance="subtle">
+                <Button onClick={this.props.close} appearance="primary" color="red">
                   Cancel
                 </Button>
               </Modal.Footer>
