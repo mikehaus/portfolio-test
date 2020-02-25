@@ -2,6 +2,7 @@ import React from 'react';
 import TrackerView from './components/tracker/tracker';
 import MainSideBar from './components/mainsidebar';
 import AboutView from './components/about';
+import WeatherView from './components/weather/weatherview';
 
 import './App.css';
 import 'rsuite/dist/styles/rsuite-dark.css'
@@ -13,7 +14,8 @@ class App extends React.Component {
     super();
     this.state = {
       aboutView: false,
-      trackerView: true,
+      trackerView: false,
+      weatherView: true,
     };
     this.changeView = this.changeView.bind(this);
   }
@@ -22,13 +24,22 @@ class App extends React.Component {
     if (eventKey === '1') {
       this.setState({
         aboutView: true,
-        trackerView: false
+        trackerView: false,
+        weatherView: false
       });
     }
     else if (eventKey === '2') {
       this.setState({
         aboutView: false,
-        trackerView: true
+        trackerView: true,
+        weatherView: false
+      });
+    }
+    else if (eventKey === '3') {
+      this.setState({
+        aboutView: false,
+        trackerView: false,
+        weatherView: true
       });
     }
   }
@@ -39,6 +50,7 @@ class App extends React.Component {
         <MainSideBar changeView={this.changeView}/>
         <AboutView displayed={this.state.aboutView}/>
         <TrackerView displayed={this.state.trackerView}/>
+        <WeatherView displayed={this.state.weatherView}/>
       </div>
     );
   }

@@ -15,7 +15,7 @@ class MainSideBar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeKey: '2',
+            activeKey: '3',
         }
         this.handleSelect = this.handleSelect.bind(this);
     }
@@ -47,6 +47,9 @@ class MainSideBar extends React.Component {
                             </Nav.Item>
                             <Nav.Item eventKey="2" icon={<Icon icon="project" />}>
                                 Project Tracker
+                            </Nav.Item>
+                            <Nav.Item eventKey="3" icon={<Icon icon="bolt" />}>
+                                Weather Area Forecast
                             </Nav.Item>
                         </Nav>
                     </Sidenav.Body>
