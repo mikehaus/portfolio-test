@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, FormGroup, FormControl, ControlLabel, HelpBlock, Modal, Button, Schema, Alert, RadioGroup, Radio } from 'rsuite';
  
-const { ArrayType, StringType, NumberType } = Schema.Types;
+const { StringType } = Schema.Types;
 const model = Schema.Model({
   name: StringType().isRequired('This field is required.'),
   description: StringType().isRequired('Please input a description for your ticket')
