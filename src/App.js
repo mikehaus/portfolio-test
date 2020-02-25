@@ -1,5 +1,5 @@
 import React from 'react';
-import TrackerView from './components/tracker';
+import TrackerView from './components/tracker/tracker';
 import MainSideBar from './components/mainsidebar';
 import AboutView from './components/about';
 
@@ -12,8 +12,8 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      aboutView: true,
-      trackerView: false,
+      aboutView: false,
+      trackerView: true,
     };
     this.changeView = this.changeView.bind(this);
   }

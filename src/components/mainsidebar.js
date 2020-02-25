@@ -6,7 +6,7 @@ const MAINSIDEBAR_STYLES = {
         width: 64,
         height: '100vh',
         display: 'flex'
-    }
+    },
 }
 
 class MainSideBar extends React.Component {
@@ -14,7 +14,7 @@ class MainSideBar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeKey: '1',
+            activeKey: '2',
         }
         this.handleSelect = this.handleSelect.bind(this);
     }
