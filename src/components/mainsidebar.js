@@ -5,7 +5,8 @@ const MAINSIDEBAR_STYLES = {
     main: {
         width: 64,
         height: '100vh',
-        display: 'flex'
+        display: 'flex',
+        color: 'white'
     },
 }
 
@@ -41,7 +42,7 @@ class MainSideBar extends React.Component {
                     </Sidenav.Header>
                     <Sidenav.Body>
                         <Nav>
-                            <Nav.Item eventKey="1" icon={<Icon icon="avatar" />}>
+                            <Nav.Item eventKey="1" icon={<Icon icon="avatar"/>}>
                                 About Me
                             </Nav.Item>
                             <Nav.Item eventKey="2" icon={<Icon icon="project" />}>

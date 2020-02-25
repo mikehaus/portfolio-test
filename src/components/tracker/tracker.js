@@ -27,9 +27,14 @@ const TRACKER_STYLES = {
     },
 }
 
-let ToDoData = {
-
-};
+let ToDoData = [
+    {
+        key: "1",
+        title: "Sample TODO title",
+        description: "Sample Description",
+        Priority: "Low"
+    },
+];
 
 let StartedData = {
 
@@ -39,11 +44,13 @@ let CompletedData = {
 
 };
 
+/* Speaker for popover whisper (Contains title of popover) */
+
 const speaker = (
     <Popover title="Add Ticket" />
   );
 
-
+/***** TRACKER VIEW component houses the view of the Ticket tracker app ******/
 
 class TrackerView extends React.Component {
 
@@ -53,8 +60,6 @@ class TrackerView extends React.Component {
             formOpen: false,
         };
         this.addTicket = this.addTicket.bind(this);
-        this.handleAddBtnMouseover = this.handleAddBtnMouseover.bind(this);
-        this.handleAddBtnMouseleave = this.handleAddBtnMouseleave.bind(this);
         this.closeForm = this.closeForm.bind(this);
     }
 
@@ -62,14 +67,6 @@ class TrackerView extends React.Component {
         this.setState({
             formOpen: true,
         });
-    }
-
-    handleAddBtnMouseover = () => {
-        //Will add whisper popover
-    }
-    
-    handleAddBtnMouseleave = () => {
-        //Will add whisper popover removal
     }
 
     closeForm = () => {
