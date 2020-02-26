@@ -1,9 +1,13 @@
 import React from 'react';
-import { Map, GoogleApiWrapper } from 'google-maps-react';
+import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
  
 const MAP_STYLES = {
-    width: 800,
-    height: 500,
+    display: 'block',
+    width: '90%',
+    height: '40%',
+    top: 10,
+    marginLeft: 'auto',
+    marginRight: 'auto',
 };
 
 
@@ -12,39 +16,12 @@ class MapContainer extends React.Component {
     constructor(props) {
         super(props);
         this.state = { 
-            lat: '',
-            long: ''
+            maplat: 40.2338,
+            maplng: -111.658531,
+            markerlat: 40.2338,
+            markerlng: -111.658531
         };
-        this.getCurrentLocation = this.getCurrentLocation.bind(this);
-        this.logLatLong = this.logLatLong.bind(this);
-    }
-
-    logLatLong = () => {
-        console.log('Latitude: ', this.state.lat);
-        console.log('Longitude: ', this.state.long);
-    }
-
-
-    getCurrentLocation = () => {
-        let latstr, longstr;
-
-        navigator.geolocation.getCurrentPosition(function(position) {
-            let lat = position.coords.latitude;
-            let long = position.coords.longitude;
-            
-            console.log(lat, long);
-
-            latstr = lat.toString();
-            longstr = long.toString();
-        });
-
-        // Not sure if the state was acutally set
-        this.setState({
-            lat: latstr,
-            long: longstr
-        });
-
-        console.log(latstr, longstr);
+        this.moveMarkerToClicked = this.moveMarkerToClicked.bind(this);
     }
 
     componentWillMount = () => {
@@ -52,7 +29,18 @@ class MapContainer extends React.Component {
     }
     
     componentDidMount = () => {
-        this.getCurrentLocation();
+    }
+
+    moveMarkerToClicked = (ref, map, e) => {
+        let lat = e.latLng.lat();
+        let lng  = e.latLng.lng();
+
+        this.setState({
+            maplat: lat,
+            maplng: lng,
+            markerlat: lat,
+            markerlng: lng
+        });
     }
 
     render() { 
@@ -62,10 +50,16 @@ class MapContainer extends React.Component {
                 zoom={14}
                 style={MAP_STYLES}
                 initialCenter={{
-                lat: -1.2884,
-                lng: 36.8233
+                lat: this.state.maplat,
+                lng: this.state.maplng
                 }}
-            />
+                onClick={this.moveMarkerToClicked}
+            >
+                <Marker 
+                    position={{lat: this.state.markerlat, lng: this.state.markerlng}}
+                    draggable
+                />
+            </Map>
         );
     }
 }
