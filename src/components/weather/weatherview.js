@@ -1,6 +1,7 @@
 import React from 'react';
 import GoogleApiWrapper from './mapcomponent';
 import ReactWeather from 'react-open-weather';
+import apiKeys from '../../data/apikeys';
 import { FlexboxGrid, Col, Table } from 'rsuite';
 
 import 'react-open-weather/lib/css/ReactWeather.css';
@@ -31,6 +32,10 @@ const WEATHER_STYLES = {
 
 const { Column, HeaderCell, Cell } = Table;
 
+let fakeLargeData = [
+    {loc: 'hello'},
+]
+
 
 class WeatherView extends React.Component {
 
@@ -38,16 +43,18 @@ class WeatherView extends React.Component {
         super(props);
         this.state = {
             isLoaded: false,
-            weatherItems: '',
+            weatherItems: [
+
+            ],
         }
     }
 
     componentDidMount() {
-        fetch("api.openweathermap.org/data/2.5/forecast?lat=40.2338&lon=-111.658531&APPID=c537f3f0ebe8427aa0a4dd154b7a217b")
+        fetch(`api.openweathermap.org/data/2.5/forecast?lat=40.2338&lon=-111.658531&APPID=c537f3f0ebe8427aa0a4dd154b7a217b`)
             .then(res => res.json())
             .then(
                 (result) => {
-                console.log(result.items);
+                console.log(result.iems);
                 this.setState({
                     isLoaded: true,
                     weatherItems: result.items
@@ -75,17 +82,18 @@ class WeatherView extends React.Component {
                 <h1>Weather View</h1>
                     <GoogleApiWrapper />
                     <div style={WEATHER_STYLES.table}>
+                        
                     <Table
                         virtualized
                         height={200}
-                        //data={fakeLargeData}
+                        data={this.state.weatherItems}
                         onRowClick={data => {
                             console.log(data);
                         }}
                         >
                             <Column width={150} align="center" fixed>
                                 <HeaderCell>Location</HeaderCell>
-                                <Cell dataKey="loc" />
+                                <Cell dataKey='loc' />
                             </Column>
 
                             <Column width={150}>
