@@ -1,6 +1,9 @@
 import React from 'react';
 import GoogleApiWrapper from './mapcomponent';
+import ReactWeather from 'react-open-weather';
 import { FlexboxGrid, Col, Table } from 'rsuite';
+
+import 'react-open-weather/lib/css/ReactWeather.css';
  
 const WEATHER_STYLES = {
     main: {
@@ -26,10 +29,41 @@ const WEATHER_STYLES = {
     }
 }
 
-const { Column, HeaderCell, Cell, Pagination } = Table;
+const { Column, HeaderCell, Cell } = Table;
 
 
 class WeatherView extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            isLoaded: false,
+            weatherItems: '',
+        }
+    }
+
+    componentDidMount() {
+        fetch("api.openweathermap.org/data/2.5/forecast?lat=40.2338&lon=-111.658531&APPID=c537f3f0ebe8427aa0a4dd154b7a217b")
+            .then(res => res.json())
+            .then(
+                (result) => {
+                console.log(result.items);
+                this.setState({
+                    isLoaded: true,
+                    weatherItems: result.items
+                });
+                },
+                // Note: it's important to handle errors here
+                // instead of a catch() block so that we don't swallow
+                // exceptions from actual bugs in components.
+                (error) => {
+                this.setState({
+                    isLoaded: true,
+                    error
+                });
+                }
+            )
+    }
 
     render() { 
         if (!this.props.displayed) {
