@@ -8,6 +8,53 @@ const MAP_STYLES = {
 
 
 class MapContainer extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = { 
+            lat: '',
+            long: ''
+        };
+        this.getCurrentLocation = this.getCurrentLocation.bind(this);
+        this.logLatLong = this.logLatLong.bind(this);
+    }
+
+    logLatLong = () => {
+        console.log('Latitude: ', this.state.lat);
+        console.log('Longitude: ', this.state.long);
+    }
+
+
+    getCurrentLocation = () => {
+        let latstr, longstr;
+
+        navigator.geolocation.getCurrentPosition(function(position) {
+            let lat = position.coords.latitude;
+            let long = position.coords.longitude;
+            
+            console.log(lat, long);
+
+            latstr = lat.toString();
+            longstr = long.toString();
+        });
+
+        // Not sure if the state was acutally set
+        this.setState({
+            lat: latstr,
+            long: longstr
+        });
+
+        console.log(latstr, longstr);
+    }
+
+    componentWillMount = () => {
+        console.log('weather view mounting...');
+    }
+    
+    componentDidMount = () => {
+        this.getCurrentLocation();
+    }
+
     render() { 
         return (
             <Map

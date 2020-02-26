@@ -26,6 +26,7 @@ const WEATHER_STYLES = {
 }
 
 class WeatherView extends React.Component {
+
     render() { 
         if (!this.props.displayed) {
             return null;
