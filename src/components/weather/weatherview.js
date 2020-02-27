@@ -36,6 +36,15 @@ let fakeLargeData = [
     {loc: 'hello'},
 ]
 
+let myWeather = {
+    loc: '',
+    temp: '',
+    humidity: '',
+    sunrise: '',
+    sunset: '',
+    windSp: '',
+    windDir: ''
+};
 
 class WeatherView extends React.Component {
 
@@ -43,33 +52,44 @@ class WeatherView extends React.Component {
         super(props);
         this.state = {
             isLoaded: false,
-            weatherItems: [
+            weatherData: null,
+            loc: '',
+            temp: '',
+            humidity: '',
 
-            ],
         }
+        this.logData = this.logData.bind(this);
+        this.setMyWeather = this.setMyWeather.bind(this);
+    }
+
+    setMyWeather(loc, temp, humidity, sunrise, sunset, windSp, windDir) {
+        myWeather.loc = loc;
+        myWeather.temp = temp;
+        myWeather.humidity = humidity;
+        myWeather.sunrise = sunrise;
+        myWeather.sunset = sunset;
+        myWeather.windSp = windSp;
+        myWeather.windDir = windDir;
     }
 
     componentDidMount() {
-        fetch(`api.openweathermap.org/data/2.5/forecast?lat=40.2338&lon=-111.658531&APPID=c537f3f0ebe8427aa0a4dd154b7a217b`)
+        fetch("http://api.openweathermap.org/data/2.5/weather?lat=40.2338&lon=-111.658531&appid=c537f3f0ebe8427aa0a4dd154b7a217b")
             .then(res => res.json())
             .then(
-                (result) => {
-                console.log(result.iems);
+                (weatherData) => {
                 this.setState({
                     isLoaded: true,
-                    weatherItems: result.items
+                    weatherData: weatherData,
+                    loc: weatherData.name
                 });
-                },
-                // Note: it's important to handle errors here
-                // instead of a catch() block so that we don't swallow
-                // exceptions from actual bugs in components.
-                (error) => {
-                this.setState({
-                    isLoaded: true,
-                    error
-                });
-                }
+                }  
             )
+    }
+
+    logData = () => {
+        console.log(this.state.weatherData);
+        console.log(this.state.isLoaded);
+        console.log(this.state.loc);
     }
 
     render() { 
@@ -78,7 +98,7 @@ class WeatherView extends React.Component {
         }
 
         return (
-            <div style={WEATHER_STYLES.main}>
+            <div style={WEATHER_STYLES.main} onClick={this.logData}>
                 <h1>Weather View</h1>
                     <GoogleApiWrapper />
                     <div style={WEATHER_STYLES.table}>
