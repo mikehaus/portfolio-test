@@ -2,7 +2,7 @@ import React from 'react';
 import GoogleApiWrapper from './mapcomponent';
 import ReactWeather from 'react-open-weather';
 import apiKeys from '../../data/apikeys';
-import { FlexboxGrid, Col, Table } from 'rsuite';
+import { Table } from 'rsuite';
 
 import 'react-open-weather/lib/css/ReactWeather.css';
  
@@ -32,64 +32,90 @@ const WEATHER_STYLES = {
 
 const { Column, HeaderCell, Cell } = Table;
 
-let fakeLargeData = [
-    {loc: 'hello'},
-]
-
-let myWeather = {
-    loc: '',
-    temp: '',
-    humidity: '',
-    sunrise: '',
-    sunset: '',
-    windSp: '',
-    windDir: ''
-};
-
 class WeatherView extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
             isLoaded: false,
-            weatherData: null,
-            loc: '',
-            temp: '',
-            humidity: '',
-
+            //loc: '',
+            //temp: '',
+            //humidity: '',
+            //sunrise: '',
+            //sunset: '',
+            //windSp: '',
+            //windDir: '',
+            weatherData: [
+                {loc: ''},
+                {temp: ''},
+                {humidity: ''},
+                {sunrise: ''},
+                {sunset: ''},
+                {temp: ''},
+                {windSp: ''},
+                {windDir: ''}
+            ]
         }
-        this.logData = this.logData.bind(this);
-        this.setMyWeather = this.setMyWeather.bind(this);
-    }
-
-    setMyWeather(loc, temp, humidity, sunrise, sunset, windSp, windDir) {
-        myWeather.loc = loc;
-        myWeather.temp = temp;
-        myWeather.humidity = humidity;
-        myWeather.sunrise = sunrise;
-        myWeather.sunset = sunset;
-        myWeather.windSp = windSp;
-        myWeather.windDir = windDir;
     }
 
     componentDidMount() {
-        fetch("http://api.openweathermap.org/data/2.5/weather?lat=40.2338&lon=-111.658531&appid=c537f3f0ebe8427aa0a4dd154b7a217b")
+        fetch(`http://api.openweathermap.org/data/2.5/weather?lat=40.2338&lon=-111.658531&appid=${apiKeys.weather}&units=imperial`)
             .then(res => res.json())
             .then(
                 (weatherData) => {
                 this.setState({
                     isLoaded: true,
-                    weatherData: weatherData,
-                    loc: weatherData.name
+                    //loc: weatherData.name,
+                    //temp: weatherData.main.temp,
+                    //humidity: weatherData.main.humidity,
+                    //sunrise: weatherData.sys.sunrise,
+                    //sunset: weatherData.sys.sunset,
+                    //windSp: weatherData.wind.speed,
+                    //windDir: weatherData.wind.deg,
+                    weatherData: [
+                        { 
+                            loc: weatherData.name,
+                            temp: weatherData.main.temp,
+                            humidity: weatherData.main.humidity,
+                            sunrise: weatherData.sys.sunrise,
+                            sunset: weatherData.sys.sunset,
+                            windSp: weatherData.wind.speed,
+                            windDir: weatherData.wind.deg
+                        },
+                    ]
                 });
                 }  
             )
     }
 
-    logData = () => {
-        console.log(this.state.weatherData);
-        console.log(this.state.isLoaded);
-        console.log(this.state.loc);
+    updateTable = (lat, lng) => {
+        fetch(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${apiKeys.weather}&units=imperial`)
+            .then(res => res.json())
+            .then(
+                (weatherData) => {
+                this.setState({
+                    isLoaded: true,
+                    //loc: weatherData.name,
+                    //temp: weatherData.main.temp,
+                    //humidity: weatherData.main.humidity,
+                    //sunrise: weatherData.sys.sunrise,
+                    //sunset: weatherData.sys.sunset,
+                    //windSp: weatherData.wind.speed,
+                    //windDir: weatherData.wind.deg,
+                    weatherData: [
+                        { 
+                            loc: weatherData.name,
+                            temp: weatherData.main.temp,
+                            humidity: weatherData.main.humidity,
+                            sunrise: weatherData.sys.sunrise,
+                            sunset: weatherData.sys.sunset,
+                            windSp: weatherData.wind.speed,
+                            windDir: weatherData.wind.deg
+                        },
+                    ]
+                });
+                }  
+            )
     }
 
     render() { 
@@ -98,22 +124,19 @@ class WeatherView extends React.Component {
         }
 
         return (
-            <div style={WEATHER_STYLES.main} onClick={this.logData}>
+            <div style={WEATHER_STYLES.main}>
                 <h1>Weather View</h1>
-                    <GoogleApiWrapper />
+                    <GoogleApiWrapper updateTable={this.updateTable} />
                     <div style={WEATHER_STYLES.table}>
                         
                     <Table
                         virtualized
-                        height={200}
-                        data={this.state.weatherItems}
-                        onRowClick={data => {
-                            console.log(data);
-                        }}
+                        height={100}
+                        data={this.state.weatherData}
                         >
                             <Column width={150} align="center" fixed>
                                 <HeaderCell>Location</HeaderCell>
-                                <Cell dataKey='loc' />
+                                <Cell dataKey="loc" />
                             </Column>
 
                             <Column width={150}>

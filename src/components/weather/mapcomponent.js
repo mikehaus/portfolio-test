@@ -42,6 +42,8 @@ class MapContainer extends React.Component {
             markerlat: lat,
             markerlng: lng
         });
+
+        this.props.updateTable(lat, lng);
     }
 
     render() { 
