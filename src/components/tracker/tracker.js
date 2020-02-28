@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlexboxGrid, List, Col, Divider, Button, IconButton, Icon, Popover, Whisper } from 'rsuite';
+import { FlexboxGrid, List, Col, Divider, Button, IconButton, Icon, Popover, Whisper, Panel, PanelGroup } from 'rsuite';
 import ModalAddForm from './modaladdform';
 import firebase from '../../firebase';
  
@@ -51,6 +51,23 @@ const speaker = (
     <Popover title="Add Ticket" />
   );
 
+
+ const PanelList = (props) => {
+    const ticketList = props.tickets;
+    const listItems = ticketList.map((ticket) =>
+      <Panel id={ticket.id} key={1} header={ticket.name} bordered>
+          <p>Description: {ticket.description}</p>
+          <p>Priority: {ticket.priority}</p>
+      </Panel>
+    );
+    return (
+      <PanelGroup>
+          {listItems}
+      </PanelGroup>
+    );
+  }
+
+
 /***** TRACKER VIEW component houses the view of the Ticket tracker app ******/
 
 class TrackerView extends React.Component {
@@ -59,9 +76,9 @@ class TrackerView extends React.Component {
         super(props);
         this.state = {
             formOpen: false,
-            highRefObject: null,
-            medRefObject: null,
-            lowRefObject: null
+            highTickets: [],
+            medTickets: [],
+            lowTickets: []
         };
         this.addTicket = this.addTicket.bind(this);
         this.closeForm = this.closeForm.bind(this);
@@ -83,26 +100,30 @@ class TrackerView extends React.Component {
 
         let mydb = firebase.database();
 
-        let ref = mydb.ref('tickets/High');
-        let medRefObject = mydb.ref('tickets/medium')
-        let lowRefObject = mydb.ref().child('low');
+        let refObject = mydb.ref('tickets');
 
-        ref.once("value")
-        .then(function(snapshot) {
-            let key = snapshot.key;
-            let childKey = snapshot.child("1").val();
-            console.log(childKey);
-        });
+        refObject.once('value')
+        .then(snapshot => {
+            let highval = snapshot.child('High').val();
+            let medval = snapshot.child('medium').toJSON();
+            let lowval = snapshot.child('low').toJSON();
+            console.log(highval, medval, lowval);
 
-        medRefObject.once("value")
-        .then(function(snapshot) {
-            let key = snapshot.key;
-            let childKey = snapshot.child('1').val();
-            console.log(childKey);
+            let higharr = [highval];
+            let medarr = [medval];
+            let lowarr = [lowval];
+
+            this.setState({
+                highTickets: higharr,
+                medTickets: medarr,
+                lowTickets: lowarr
+            });
         });
     }
 
     render() { 
+
+        let highList = this.state.highTickets;
         
         if (!this.props.displayed) {
             return null;
@@ -130,6 +151,7 @@ class TrackerView extends React.Component {
                 <FlexboxGrid justify='space-around' style={TRACKER_STYLES.main}>
                     <FlexboxGrid.Item componentClass={Col} colspan={24} lg={7} md={7} sm={23}>
                         <h4 style={TRACKER_STYLES.header}>To Do</h4>
+                            <PanelList tickets={this.state.highTickets} />
                         <Divider />
                     </FlexboxGrid.Item>
                     <FlexboxGrid.Item componentClass={Col} colspan={24} lg={7} md={7} sm={23}>
