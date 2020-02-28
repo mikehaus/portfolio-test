@@ -1,6 +1,5 @@
 import React from 'react';
 import GoogleApiWrapper from './mapcomponent';
-import ReactWeather from 'react-open-weather';
 import apiKeys from '../../data/apikeys';
 import { Table } from 'rsuite';
 

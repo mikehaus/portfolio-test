@@ -3,6 +3,7 @@ import TrackerView from './components/tracker/tracker';
 import MainSideBar from './components/mainsidebar';
 import AboutView from './components/about';
 import WeatherView from './components/weather/weatherview';
+import firebase from './firebase';
 
 import './App.css';
 import 'rsuite/dist/styles/rsuite-dark.css'
@@ -14,8 +15,9 @@ class App extends React.Component {
     super();
     this.state = {
       aboutView: false,
-      trackerView: false,
-      weatherView: true,
+      trackerView: true,
+      weatherView: false,
+      db: null,
     };
     this.changeView = this.changeView.bind(this);
   }
@@ -43,13 +45,19 @@ class App extends React.Component {
       });
     }
   }
+
+  componentWillMount = () => {
+    this.setState({
+      db: firebase.database()
+    });
+  }
  
   render() {
     return (
       <div>
         <MainSideBar changeView={this.changeView}/>
         <AboutView displayed={this.state.aboutView}/>
-        <TrackerView displayed={this.state.trackerView}/>
+        <TrackerView db={this.state.db} displayed={this.state.trackerView}/>
         <WeatherView displayed={this.state.weatherView}/>
       </div>
     );

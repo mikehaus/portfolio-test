@@ -1,6 +1,7 @@
 import React from 'react';
 import { FlexboxGrid, List, Col, Divider, Button, IconButton, Icon, Popover, Whisper } from 'rsuite';
 import ModalAddForm from './modaladdform';
+import firebase from '../../firebase';
  
 const TRACKER_STYLES = {
     main: {
@@ -58,6 +59,9 @@ class TrackerView extends React.Component {
         super(props);
         this.state = {
             formOpen: false,
+            highRefObject: null,
+            medRefObject: null,
+            lowRefObject: null
         };
         this.addTicket = this.addTicket.bind(this);
         this.closeForm = this.closeForm.bind(this);
@@ -72,6 +76,29 @@ class TrackerView extends React.Component {
     closeForm = () => {
         this.setState({
             formOpen: false
+        });
+    }
+
+    componentWillMount = () => {
+
+        let mydb = firebase.database();
+
+        let ref = mydb.ref('tickets/High');
+        let medRefObject = mydb.ref('tickets/medium')
+        let lowRefObject = mydb.ref().child('low');
+
+        ref.once("value")
+        .then(function(snapshot) {
+            let key = snapshot.key;
+            let childKey = snapshot.child("1").val();
+            console.log(childKey);
+        });
+
+        medRefObject.once("value")
+        .then(function(snapshot) {
+            let key = snapshot.key;
+            let childKey = snapshot.child('1').val();
+            console.log(childKey);
         });
     }
 

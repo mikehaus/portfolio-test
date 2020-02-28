@@ -15,7 +15,7 @@ class MainSideBar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeKey: '3',
+            activeKey: '2',
         }
         this.handleSelect = this.handleSelect.bind(this);
     }
