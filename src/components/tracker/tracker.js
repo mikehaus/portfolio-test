@@ -26,24 +26,10 @@ const TRACKER_STYLES = {
         right: 10,
         zIndex: 1,
     },
+    listStyle: {
+        marginTop: 10,
+    }
 }
-
-let ToDoData = [
-    {
-        key: "1",
-        title: "Sample TODO title",
-        description: "Sample Description",
-        Priority: "Low"
-    },
-];
-
-let StartedData = {
-
-};
-
-let CompletedData = {
-
-};
 
 /* Speaker for popover whisper (Contains title of popover) */
 
@@ -52,20 +38,22 @@ const speaker = (
   );
 
 
- const PanelList = (props) => {
+/* PanelList is component to list all tickets in a category */
+
+function PanelList(props) {
     const ticketList = props.tickets;
     const listItems = ticketList.map((ticket) =>
-      <Panel id={ticket.id} key={1} header={ticket.name} bordered>
-          <p>Description: {ticket.description}</p>
-          <p>Priority: {ticket.priority}</p>
-      </Panel>
+        <Panel style={TRACKER_STYLES.listStyle} key={ticket.id} header={ticket.name} bordered>
+            <p>Description: {ticket.description}</p>
+            <p>Priority: {ticket.priority}</p>
+        </Panel>
     );
     return (
-      <PanelGroup>
-          {listItems}
-      </PanelGroup>
-    );
-  }
+        <List>
+            {listItems}
+        </List>
+    )
+}
 
 
 /***** TRACKER VIEW component houses the view of the Ticket tracker app ******/
@@ -76,54 +64,97 @@ class TrackerView extends React.Component {
         super(props);
         this.state = {
             formOpen: false,
-            highTickets: [],
-            medTickets: [],
-            lowTickets: []
+            todo: [],
+            started: [],
+            completed: []
         };
         this.addTicket = this.addTicket.bind(this);
         this.closeForm = this.closeForm.bind(this);
     }
 
+    // opens form after add button is pressed
     addTicket = () => {
         this.setState({
             formOpen: true,
         });
     }
 
+    // function closes form after close button is pressed
     closeForm = () => {
         this.setState({
             formOpen: false
         });
     }
 
+    // Takes all data from Firebase DB and puts into state arrays for retrieval on page
     componentWillMount = () => {
-
-        let mydb = firebase.database();
-
-        let refObject = mydb.ref('tickets');
-
-        refObject.once('value')
-        .then(snapshot => {
-            let highval = snapshot.child('High').val();
-            let medval = snapshot.child('medium').toJSON();
-            let lowval = snapshot.child('low').toJSON();
-            console.log(highval, medval, lowval);
-
-            let higharr = [highval];
-            let medarr = [medval];
-            let lowarr = [lowval];
-
+        const todoRef = firebase.database().ref('tickets/todo');
+        const startedRef = firebase.database().ref('tickets/started');
+        const completedRef = firebase.database().ref('tickets/completed');
+        
+        // This takes the value of each todo ticket in tickets fb db and puts values in array, then sets state after
+        todoRef.on('value', (snapshot) => {
+            let tickets = snapshot.val();
+            let todoState = [];
+            for (let ticket in tickets) {
+                todoState.push({
+                    id: ticket,
+                    name: tickets[ticket].name,
+                    description: tickets[ticket].description,
+                    priority: tickets[ticket].priority
+                });
+                console.log(tickets[ticket].name, tickets[ticket].description);
+            }
             this.setState({
-                highTickets: higharr,
-                medTickets: medarr,
-                lowTickets: lowarr
+                todo: todoState
             });
         });
+
+        startedRef.on('value', (snapshot) => {
+            let tickets = snapshot.val();
+            let startedState = [];
+            for (let ticket in tickets) {
+                startedState.push({
+                    id: ticket,
+                    name: tickets[ticket].name,
+                    description: tickets[ticket].description,
+                    priority: tickets[ticket].priority
+                });
+                console.log(tickets[ticket].name, tickets[ticket].description);
+            }
+            this.setState({
+                started: startedState
+            });
+        });
+
+        completedRef.on('value', (snapshot) => {
+            let tickets = snapshot.val();
+            let completedState = [];
+            for (let ticket in tickets) {
+                completedState.push({
+                    id: ticket,
+                    name: tickets[ticket].name,
+                    description: tickets[ticket].description,
+                    priority: tickets[ticket].priority
+                });
+                console.log(tickets[ticket].name, tickets[ticket].description);
+            }
+            this.setState({
+                completed: completedState
+            });
+        });
+
+        // old code, leaving in for ideas or possible implementation
+        /*todoRef.on('value')
+            .then(snapshot => {
+                snapshot.forEach(childSnapshot => {
+                    console.log(childSnapshot.val());
+                });
+            });*/
+        
     }
 
     render() { 
-
-        let highList = this.state.highTickets;
         
         if (!this.props.displayed) {
             return null;
@@ -151,16 +182,18 @@ class TrackerView extends React.Component {
                 <FlexboxGrid justify='space-around' style={TRACKER_STYLES.main}>
                     <FlexboxGrid.Item componentClass={Col} colspan={24} lg={7} md={7} sm={23}>
                         <h4 style={TRACKER_STYLES.header}>To Do</h4>
-                            <PanelList tickets={this.state.highTickets} />
                         <Divider />
+                        <PanelList tickets={this.state.todo} />
                     </FlexboxGrid.Item>
                     <FlexboxGrid.Item componentClass={Col} colspan={24} lg={7} md={7} sm={23}>
                         <h4 style={TRACKER_STYLES.header}>Started</h4>
                         <Divider />
+                        <PanelList tickets={this.state.started} />
                     </FlexboxGrid.Item>
                     <FlexboxGrid.Item componentClass={Col} colspan={24} lg={7} md={7} sm={23}>
                         <h4 style={TRACKER_STYLES.header}>Completed</h4>
                         <Divider />
+                        <PanelList tickets={this.state.completed} />
                     </FlexboxGrid.Item>
                 </FlexboxGrid>
             </div>
