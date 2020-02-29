@@ -3,9 +3,11 @@ import { Sidenav, Nav, Icon, Divider } from 'rsuite';
 
 const MAINSIDEBAR_STYLES = {
     main: {
-        width: 64,
+        width: 65,
+        position: 'fixed',
         height: '100vh',
         display: 'flex',
+        left: 0,
         color: 'white'
     },
 }

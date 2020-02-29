@@ -3,7 +3,7 @@ import React from 'react';
 const ABOUT_STYLES = {
     main: {
       width: '95vw',
-      height: '90vh',
+      height: '110vh',
       overflowY: 'auto',
       overflowX: 'none',
       position: 'absolute',

@@ -5,8 +5,8 @@ import firebase from '../../firebase';
  
 const TRACKER_STYLES = {
     main: {
-        width: '95vw',
-        height: '90vh',
+        width: '100% - 65px',
+        height: '100vh',
         overflowY: 'auto',
         overflowX: 'none',
         position: 'absolute',
@@ -24,7 +24,6 @@ const TRACKER_STYLES = {
         position: 'absolute',
         top: 10,
         right: 10,
-        zIndex: 1,
     },
     listStyle: {
         marginTop: 10,
@@ -35,23 +34,24 @@ const TRACKER_STYLES = {
 
 const speaker = (
     <Popover title="Add Ticket" />
-  );
+);
 
 
 /* PanelList is component to list all tickets in a category */
 
 function PanelList(props) {
-    const ticketList = props.tickets;
+    const ticketList = props.tickets; 
     const listItems = ticketList.map((ticket) =>
-        <Panel style={TRACKER_STYLES.listStyle} key={ticket.id} header={ticket.name} bordered>
+        <Panel  key={ticket.id} header={ticket.name} bordered>
             <p>Description: {ticket.description}</p>
             <p>Priority: {ticket.priority}</p>
         </Panel>
+
     );
     return (
-        <List>
+        <PanelGroup accordion>
             {listItems}
-        </List>
+        </PanelGroup>
     )
 }
 
