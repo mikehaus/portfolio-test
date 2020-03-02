@@ -146,8 +146,18 @@ class TrackerView extends React.Component {
         });
     }
 
+    // function gets info from form and pushes that into state To Do
+    // because it updates state, it rerenders the todo list
     processForm = (formValue) => {
-        console.log(formValue);
+        let todoState = this.state.todo;
+        let todoCount = this.state.todocount + 1;
+        console.log(todoCount);
+        formValue.id = todoCount;
+        todoState.push(formValue);
+        this.setState({
+            todo: todoState,
+            todocount: todoCount
+        });
     }
 
     // Takes all data from Firebase DB and puts into state arrays for retrieval on page
