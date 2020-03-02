@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlexboxGrid, List, Col, Divider, Button, IconButton, Icon, Popover, Whisper, Panel, PanelGroup } from 'rsuite';
+import { FlexboxGrid, List, Col, Divider, Button, IconButton, Icon, Popover, Whisper, Panel, PanelGroup, ButtonToolbar } from 'rsuite';
 import ModalAddForm from './modaladdform';
 import firebase from '../../firebase';
  
@@ -27,26 +27,80 @@ const TRACKER_STYLES = {
     },
     listStyle: {
         marginTop: 10,
+    },
+    buttonList: {
+        marginTop: 5,
+        textAlign: 'center'
     }
 }
 
 /* Speaker for popover whisper (Contains title of popover) */
 
-const speaker = (
+const addticketspeaker = (
     <Popover title="Add Ticket" />
 );
 
+const moveleftspeaker = (
+    <Popover title="Move Ticket to Previous Category" />
+);
+
+const moverightspeaker = (
+    <Popover title="Move Ticket to Next Category" />
+);
+
+const editspeaker = (
+    <Popover title="Edit Ticket" />
+);
 
 /* PanelList is component to list all tickets in a category */
 
 function PanelList(props) {
     const ticketList = props.tickets; 
+    let left = props.left;
+    let right = props.right;
     const listItems = ticketList.map((ticket) =>
-        <Panel  key={ticket.id} header={ticket.name} bordered>
+        <Panel  
+            key={ticket.id} 
+            header={ticket.name} 
+            bordered>
             <p>Description: {ticket.description}</p>
             <p>Priority: {ticket.priority}</p>
+            <ButtonToolbar 
+                style={TRACKER_STYLES.buttonList}>
+                {left ? 
+                    <Whisper
+                        placement="bottom"
+                        speaker={moveleftspeaker}
+                        trigger='hover'>
+                        <IconButton 
+                            onClick={props.moveLeft} 
+                            icon={<Icon icon="arrow-left" />} 
+                            color="green"/> 
+                    </Whisper>
+                    : null }
+                <Whisper
+                    placement="bottom"
+                    speaker={editspeaker}
+                    trigger='hover'>
+                    <Button 
+                        onClick={props.editTicket} 
+                        color="yellow">
+                            Edit
+                    </Button>
+                </Whisper>
+                {right ?
+                    <Whisper
+                        placement="bottom"
+                        speaker={moverightspeaker}
+                        trigger='hover'>
+                        <IconButton 
+                            onClick={props.moveRight} 
+                            icon={<Icon icon="arrow-right" />} 
+                            color="green"/> 
+                    </Whisper>
+                    : null }
+            </ButtonToolbar>
         </Panel>
-
     );
     return (
         <PanelGroup accordion>
@@ -66,7 +120,10 @@ class TrackerView extends React.Component {
             formOpen: false,
             todo: [],
             started: [],
-            completed: []
+            completed: [],
+            todocount: 0,
+            startedcount: 0,
+            completedcount: 0
         };
         this.addTicket = this.addTicket.bind(this);
         this.closeForm = this.closeForm.bind(this);
@@ -96,6 +153,7 @@ class TrackerView extends React.Component {
         todoRef.on('value', (snapshot) => {
             let tickets = snapshot.val();
             let todoState = [];
+            let todoCount = 0;
             for (let ticket in tickets) {
                 todoState.push({
                     id: ticket,
@@ -103,16 +161,19 @@ class TrackerView extends React.Component {
                     description: tickets[ticket].description,
                     priority: tickets[ticket].priority
                 });
+                todoCount++;
                 console.log(tickets[ticket].name, tickets[ticket].description);
             }
             this.setState({
-                todo: todoState
+                todo: todoState,
+                todocount: todoCount
             });
         });
 
         startedRef.on('value', (snapshot) => {
             let tickets = snapshot.val();
             let startedState = [];
+            let startedCount = 0;
             for (let ticket in tickets) {
                 startedState.push({
                     id: ticket,
@@ -120,16 +181,19 @@ class TrackerView extends React.Component {
                     description: tickets[ticket].description,
                     priority: tickets[ticket].priority
                 });
+                startedCount++;
                 console.log(tickets[ticket].name, tickets[ticket].description);
             }
             this.setState({
-                started: startedState
+                started: startedState,
+                startedCount: startedCount
             });
         });
 
         completedRef.on('value', (snapshot) => {
             let tickets = snapshot.val();
             let completedState = [];
+            let completedCount = 0;
             for (let ticket in tickets) {
                 completedState.push({
                     id: ticket,
@@ -137,10 +201,12 @@ class TrackerView extends React.Component {
                     description: tickets[ticket].description,
                     priority: tickets[ticket].priority
                 });
+                completedCount++;
                 console.log(tickets[ticket].name, tickets[ticket].description);
             }
             this.setState({
-                completed: completedState
+                completed: completedState,
+                completedcount: completedCount
             });
         });
 
@@ -163,37 +229,63 @@ class TrackerView extends React.Component {
         return (
             <div>
                 <Whisper
-                placement="bottomEnd"
-                speaker={speaker}
-                trigger='hover'
-                >
+                    placement="bottomEnd"
+                    speaker={addticketspeaker}
+                    trigger='hover'>
                     <IconButton 
-                    style={TRACKER_STYLES.btn}
-                    icon={<Icon icon="plus" />} 
-                    onClick={this.addTicket}
-                    appearance='primary'
-                    color='green'
-                    size='lg'
-                    onMouseEnter={this.handleAddBtnMouseover}
-                    onMouseLeave={this.handleAddBtnMouseleave}
-                    />
+                        style={TRACKER_STYLES.btn}
+                        icon={<Icon icon="plus" />} 
+                        onClick={this.addTicket}
+                        appearance='primary'
+                        color='green'
+                        size='lg'
+                        onMouseEnter={this.handleAddBtnMouseover}
+                        onMouseLeave={this.handleAddBtnMouseleave}/>
                 </Whisper>
-                <ModalAddForm show={this.state.formOpen} close={this.closeForm} />
-                <FlexboxGrid justify='space-around' style={TRACKER_STYLES.main}>
-                    <FlexboxGrid.Item componentClass={Col} colspan={24} lg={7} md={7} sm={23}>
+                <ModalAddForm 
+                    show={this.state.formOpen} 
+                    close={this.closeForm} />
+                <FlexboxGrid 
+                    justify='space-around' 
+                    style={TRACKER_STYLES.main}>
+                    <FlexboxGrid.Item 
+                        componentClass={Col} 
+                        colspan={24} 
+                        lg={7} 
+                        md={7} 
+                        sm={23}>
                         <h4 style={TRACKER_STYLES.header}>To Do</h4>
                         <Divider />
-                        <PanelList tickets={this.state.todo} />
+                        <PanelList 
+                            tickets={this.state.todo} 
+                            left={false} 
+                            right={true} />
                     </FlexboxGrid.Item>
-                    <FlexboxGrid.Item componentClass={Col} colspan={24} lg={7} md={7} sm={23}>
+                    <FlexboxGrid.Item 
+                        componentClass={Col}
+                        colspan={24} 
+                        lg={7} 
+                        md={7} 
+                        sm={23}>
                         <h4 style={TRACKER_STYLES.header}>Started</h4>
                         <Divider />
-                        <PanelList tickets={this.state.started} />
+                        <PanelList 
+                            tickets={this.state.started} 
+                            left={true} 
+                            right={true} />
                     </FlexboxGrid.Item>
-                    <FlexboxGrid.Item componentClass={Col} colspan={24} lg={7} md={7} sm={23}>
+                    <FlexboxGrid.Item 
+                        componentClass={Col} 
+                        colspan={24} 
+                        lg={7} 
+                        md={7} 
+                        sm={23}>
                         <h4 style={TRACKER_STYLES.header}>Completed</h4>
                         <Divider />
-                        <PanelList tickets={this.state.completed} />
+                        <PanelList 
+                            tickets={this.state.completed} 
+                            left={true} 
+                            right={false} />
                     </FlexboxGrid.Item>
                 </FlexboxGrid>
             </div>

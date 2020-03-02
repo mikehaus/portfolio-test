@@ -23,6 +23,7 @@ class App extends React.Component {
   }
 
   changeView = (eventKey) => {
+    // may implement with switch, but for now if/else if
     if (eventKey === '1') {
       this.setState({
         aboutView: true,
