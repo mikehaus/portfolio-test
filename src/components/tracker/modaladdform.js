@@ -54,15 +54,18 @@ class ModalAddForm extends React.Component {
           return;
         }
         Alert.success('Success');
+        this.props.formSubmitted(formValue);
         this.props.close();
       }
 
       close() {
         this.setState({ show: false });
       }
+
       open() {
         this.setState({ show: true });
       }
+
       handleChange(value) {
         this.setState({
           formValue: value

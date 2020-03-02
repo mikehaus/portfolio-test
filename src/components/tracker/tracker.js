@@ -52,7 +52,10 @@ const editspeaker = (
     <Popover title="Edit Ticket" />
 );
 
-/* PanelList is component to list all tickets in a category */
+/* PanelList is component to list all tickets in a category 
+    It has a listItems const which has a list of all the panels in the list that 
+    populate info inside based on info received in props (usually called at componentDidMount in parent component)
+*/
 
 function PanelList(props) {
     const ticketList = props.tickets; 
@@ -141,6 +144,10 @@ class TrackerView extends React.Component {
         this.setState({
             formOpen: false
         });
+    }
+
+    processForm = (formValue) => {
+        console.log(formValue);
     }
 
     // Takes all data from Firebase DB and puts into state arrays for retrieval on page
@@ -244,7 +251,8 @@ class TrackerView extends React.Component {
                 </Whisper>
                 <ModalAddForm 
                     show={this.state.formOpen} 
-                    close={this.closeForm} />
+                    close={this.closeForm}
+                    formSubmitted={this.processForm} />
                 <FlexboxGrid 
                     justify='space-around' 
                     style={TRACKER_STYLES.main}>
