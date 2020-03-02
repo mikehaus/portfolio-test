@@ -21,7 +21,7 @@ const TRACKER_STYLES = {
         margin: '10px',
     },
     btn: {
-        position: 'absolute',
+        position: 'fixed',
         top: 10,
         right: 10,
     },
@@ -148,15 +148,24 @@ class TrackerView extends React.Component {
 
     // function gets info from form and pushes that into state To Do
     // because it updates state, it rerenders the todo list
-    processForm = (formValue) => {
+    // After it changes state, it pushes info into db
+    processForm = (formKey) => {
         let todoState = this.state.todo;
         let todoCount = this.state.todocount + 1;
         console.log(todoCount);
-        formValue.id = todoCount;
-        todoState.push(formValue);
+        formKey.id = todoCount;
+        todoState.push(formKey);
         this.setState({
             todo: todoState,
             todocount: todoCount
+        });
+
+        let formValues = Object.values(formKey);
+        console.log(formValues);
+        firebase.database().ref(`tickets/todo/${todoCount}`).set({
+            name: formValues[0],
+            priority: formValues[1],
+            description: formValues[2] 
         });
     }
 
