@@ -32,10 +32,15 @@ class ModalAddForm extends React.Component {
     constructor(props) {
         super(props);
         const formValue = {
+          name: '',
+          priority: 'Low',
+          description: '',
+        };
+        /*{
             name: '',
             priority: 'Low',
             description: '',
-        };
+        };*/
         this.state = {
             formValue: formValue,
             formError: {},
@@ -71,14 +76,17 @@ class ModalAddForm extends React.Component {
           formValue: value
         });
       }
+
+
       render() {
 
-        const { formError, formValue } = this.state;
+        const { formError } = this.state;
+        const formValue = this.props.formData;
         return (
           <div>
             <Modal show={this.props.show} onHide={this.close} size="xs">
               <Modal.Header>
-                <Modal.Title>New Ticket</Modal.Title>
+                <Modal.Title>{this.props.edit ? 'Edit Ticket': 'New Ticket'}</Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <Form

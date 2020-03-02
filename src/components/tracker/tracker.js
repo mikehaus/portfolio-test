@@ -29,9 +29,9 @@ const TRACKER_STYLES = {
         marginTop: 10,
     },
     buttonList: {
-        marginTop: 5,
+        marginTop: 10,
         textAlign: 'center'
-    }
+    },
 }
 
 /* Speaker for popover whisper (Contains title of popover) */
@@ -55,16 +55,19 @@ const editspeaker = (
 /* PanelList is component to list all tickets in a category 
     It has a listItems const which has a list of all the panels in the list that 
     populate info inside based on info received in props (usually called at componentDidMount in parent component)
+
+    It also renders Move buttons according to which list the panel is positioned 
 */
 
 function PanelList(props) {
     const ticketList = props.tickets; 
     let left = props.left;
     let right = props.right;
+
     const listItems = ticketList.map((ticket) =>
         <Panel  
             key={ticket.id} 
-            header={ticket.name} 
+            header={ticket.name}
             bordered>
             <p>Description: {ticket.description}</p>
             <p>Priority: {ticket.priority}</p>
@@ -76,9 +79,11 @@ function PanelList(props) {
                         speaker={moveleftspeaker}
                         trigger='hover'>
                         <IconButton 
-                            onClick={props.moveLeft} 
+                            onClick={() => {
+                                props.moveLeft('left', ticket.id, props.listName)}} 
                             icon={<Icon icon="arrow-left" />} 
-                            color="green"/> 
+                            color="green"
+                            style={TRACKER_STYLES.moveLeft}/> 
                     </Whisper>
                     : null }
                 <Whisper
@@ -86,7 +91,8 @@ function PanelList(props) {
                     speaker={editspeaker}
                     trigger='hover'>
                     <Button 
-                        onClick={props.editTicket} 
+                        onClick={() => {
+                            props.editTicket(ticket.id, props.listName)}} 
                         color="yellow">
                             Edit
                     </Button>
@@ -97,7 +103,8 @@ function PanelList(props) {
                         speaker={moverightspeaker}
                         trigger='hover'>
                         <IconButton 
-                            onClick={props.moveRight} 
+                            onClick={() => {
+                                props.moveRight('right', ticket.id, props.listName)}} 
                             icon={<Icon icon="arrow-right" />} 
                             color="green"/> 
                     </Whisper>
@@ -126,10 +133,14 @@ class TrackerView extends React.Component {
             completed: [],
             todocount: 0,
             startedcount: 0,
-            completedcount: 0
+            completedcount: 0,
+            edit: false,
+            formData: {}
         };
         this.addTicket = this.addTicket.bind(this);
         this.closeForm = this.closeForm.bind(this);
+        this.moveTicket = this.moveTicket.bind(this);
+        this.editTicket = this.editTicket.bind(this);
     }
 
     // opens form after add button is pressed
@@ -142,9 +153,44 @@ class TrackerView extends React.Component {
     // function closes form after close button is pressed
     closeForm = () => {
         this.setState({
-            formOpen: false
+            edit: false,
+            formOpen: false,
+            formData: {
+                name: '',
+                priority: 'Low',
+                description: ''
+            }
         });
     }
+
+
+    moveTicket = (direction, id, listname) => {
+        console.table(direction, id, listname);
+    }
+
+    editTicket = (id, listname) => {
+        let list = [];
+        if (listname === 'todo') {
+            list = this.state.todo;
+        }
+        else if (listname === 'started') {
+            list = this.state.started;
+        }
+        else if (listname === 'completed') {
+            list = this.state.completed
+        }
+
+        let entry = list[id];
+
+        console.log(entry);
+
+        this.setState({
+            formData: entry,
+            edit: true,
+            formOpen: true,
+        })
+    }
+
 
     // function gets info from form and pushes that into state To Do
     // because it updates state, it rerenders the todo list
@@ -269,7 +315,9 @@ class TrackerView extends React.Component {
                         onMouseLeave={this.handleAddBtnMouseleave}/>
                 </Whisper>
                 <ModalAddForm 
-                    show={this.state.formOpen} 
+                    formData={this.state.formData}
+                    show={this.state.formOpen}
+                    edit={this.state.edit} 
                     close={this.closeForm}
                     formSubmitted={this.processForm} />
                 <FlexboxGrid 
@@ -283,7 +331,11 @@ class TrackerView extends React.Component {
                         sm={23}>
                         <h4 style={TRACKER_STYLES.header}>To Do</h4>
                         <Divider />
-                        <PanelList 
+                        <PanelList
+                            listName={'todo'}
+                            moveLeft={this.moveTicket} 
+                            moveRight={this.moveTicket}
+                            editTicket={this.editTicket}
                             tickets={this.state.todo} 
                             left={false} 
                             right={true} />
@@ -297,6 +349,10 @@ class TrackerView extends React.Component {
                         <h4 style={TRACKER_STYLES.header}>Started</h4>
                         <Divider />
                         <PanelList 
+                            listName={'started'}
+                            moveLeft={this.moveTicket} 
+                            moveRight={this.moveTicket}
+                            editTicket={this.editTicket}
                             tickets={this.state.started} 
                             left={true} 
                             right={true} />
@@ -310,6 +366,10 @@ class TrackerView extends React.Component {
                         <h4 style={TRACKER_STYLES.header}>Completed</h4>
                         <Divider />
                         <PanelList 
+                            listName={'completed'}
+                            moveLeft={this.moveTicket} 
+                            moveRight={this.moveTicket}
+                            editTicket={this.editTicket}
                             tickets={this.state.completed} 
                             left={true} 
                             right={false} />
