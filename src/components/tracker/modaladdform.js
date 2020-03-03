@@ -87,7 +87,6 @@ class ModalAddForm extends React.Component {
                 <Form
                 ref={ref => (this.form = ref)}
                 onChange={formValue => {
-                    console.log(formValue);
                     this.setState({ formValue });
                 }}
                 onCheck={formError => {

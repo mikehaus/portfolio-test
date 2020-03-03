@@ -200,11 +200,13 @@ class TrackerView extends React.Component {
         let entry = ticket;
 
         let listMoveLength = listMoveTo.length;
+        console.log(listMoveLength);
         entry.id = listMoveLength.toString(10);
+        let entryId = entry.id;
 
         console.log(index);
         console.log(ticket);
-
+        
         list.splice(index, 1);
 
         listMoveTo.push(entry);
@@ -216,12 +218,15 @@ class TrackerView extends React.Component {
         let db = firebase.database();
 
         if (listname === 'todo') {
+            let todoCount = this.state.todocount - 1;
+            let startedCount = this.state.startedcount + 1;
             this.setState({
                 todo: list,
                 started: listMoveTo,
-                todocount: this.state.todocount - 1
+                todocount: todoCount,
+                startedcount: startedCount,
             });
-            db.ref(`tickets/todo/${index}`).remove();
+            db.ref(`tickets/todo/${entryId}`).remove();
             db.ref(`tickets/started/${listMoveLength}`).set({
                 name: entry.name,
                 description: entry.description,
@@ -237,24 +242,71 @@ class TrackerView extends React.Component {
 
 
         else if (listname === 'started') {
+            let todoCount = this.state.todocount + 1;
+            let startedCount = this.state.startedcount - 1;
+            let completedCount = this.state.completedcount + 1;
             if (direction === 'left') {
                 this.setState({
                     started: list,
-                    todo: listMoveTo
+                    todo: listMoveTo,
+                    startedcount: startedCount,
+                    todocount: todoCount,
+                });
+                db.ref(`tickets/started/${entryId}`).remove();
+                db.ref(`tickets/todo/${listMoveLength}`).set({
+                    name: entry.name,
+                    description: entry.description,
+                    priority: entry.priority
+                }, function(error) {
+                    if (error) {
+                        console.log('write failed');
+                    } else {
+                        console.log('write succeeded');
+                    }
                 });
             }
             else if (direction === 'right') {
                 this.setState({
                     started: list,
-                    completed: listMoveTo
+                    completed: listMoveTo,
+                    startedcount: startedCount,
+                    completedcount: completedCount
+                });
+                db.ref(`tickets/started/${entryId}`).remove();
+                db.ref(`tickets/completed/${listMoveLength}`).set({
+                    name: entry.name,
+                    description: entry.description,
+                    priority: entry.priority
+                }, function(error) {
+                    if (error) {
+                        console.log('write failed');
+                    } else {
+                        console.log('write succeeded');
+                    }
                 });
             }
         }
 
         else if (listname === 'completed') {
+            let completedCount = this.state.completedcount - 1;
+            let startedCount = this.state.startedcount + 1;
             this.setState({
                 completed: list,
-                started: listMoveTo
+                started: listMoveTo,
+                completedcount: completedCount,
+                startedcount: startedCount
+            });
+            db.ref(`tickets/completed/${entryId}`).remove();
+            db.ref(`tickets/started/${listMoveLength}`).set({
+                name: entry.name,
+                description: entry.description,
+                priority: entry.priority
+            }, function(error) {
+                if (error) {
+                    console.log('write failed');
+                } else {
+                    console.log('write succeeded');
+                }
             });
         }
     }
@@ -292,7 +344,8 @@ class TrackerView extends React.Component {
         let newTodo = {
             name: formKey.name,
             description: formKey.description,
-            priority: formKey.priority
+            priority: formKey.priority,
+            id: formKey.id
         };
         todoState.push(newTodo);
         this.setState({
@@ -304,7 +357,7 @@ class TrackerView extends React.Component {
         firebase.database().ref(`tickets/todo/${todoCount}`).set({
             name: newTodo.name,
             priority: newTodo.priority,
-            description: newTodo.desc, 
+            description: newTodo.description, 
         });
     }
 
