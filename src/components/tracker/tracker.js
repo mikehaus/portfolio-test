@@ -133,9 +133,6 @@ class TrackerView extends React.Component {
             todo: [],
             started: [],
             completed: [],
-            todocount: 0,
-            startedcount: 0,
-            completedcount: 0,
             edit: false,
             formData: {}, 
         };
@@ -199,8 +196,6 @@ class TrackerView extends React.Component {
         let index = list.indexOf(ticket);
         let entry = ticket;
 
-        //let listMoveLength = listMoveTo.length;
-        //entry.id = listMoveLength.toString(10);
         let entryId = entry.id;
 
         list.splice(index, 1);
@@ -215,13 +210,9 @@ class TrackerView extends React.Component {
         let db = firebase.database();
 
         if (listname === 'todo') {
-            let todoCount = this.state.todocount - 1;
-            let startedCount = this.state.startedcount + 1;
             this.setState({
                 todo: list,
                 started: listMoveTo,
-                todocount: todoCount,
-                startedcount: startedCount,
             });
             db.ref(`tickets/todo/${entryId}`).remove();
             db.ref(`tickets/started/${entryId}`).set({
@@ -238,15 +229,10 @@ class TrackerView extends React.Component {
         }
 
         else if (listname === 'started') {
-            let todoCount = this.state.todocount + 1;
-            let startedCount = this.state.startedcount - 1;
-            let completedCount = this.state.completedcount + 1;
             if (direction === 'left') {
                 this.setState({
                     started: list,
                     todo: listMoveTo,
-                    startedcount: startedCount,
-                    todocount: todoCount,
                 });
                 db.ref(`tickets/started/${entryId}`).remove();
                 db.ref(`tickets/todo/${entryId}`).set({
@@ -265,12 +251,9 @@ class TrackerView extends React.Component {
                 this.setState({
                     started: list,
                     completed: listMoveTo,
-                    startedcount: startedCount,
-                    completedcount: completedCount
                 });
                 db.ref(`tickets/started/${entryId}`).remove();
                 db.ref(`tickets/completed/${entryId}`).set({
-                //db.ref(`tickets/completed/${listMoveLength}`).set({
                     name: entry.name,
                     description: entry.description,
                     priority: entry.priority
@@ -285,13 +268,9 @@ class TrackerView extends React.Component {
         }
 
         else if (listname === 'completed') {
-            let completedCount = this.state.completedcount - 1;
-            let startedCount = this.state.startedcount + 1;
             this.setState({
                 completed: list,
                 started: listMoveTo,
-                completedcount: completedCount,
-                startedcount: startedCount
             });
             db.ref(`tickets/completed/${entryId}`).remove();
             db.ref(`tickets/started/${entryId}`).set({
@@ -336,8 +315,6 @@ class TrackerView extends React.Component {
     // After it changes state, it pushes info into db
     processForm = (formKey) => {
         let todoState = this.state.todo;
-        let todoCount = this.state.todocount;
-        //formKey.id = todoCount.toString(10);
         formKey.id = uuidv4();
         let newTodo = {
             name: formKey.name,
@@ -348,7 +325,6 @@ class TrackerView extends React.Component {
         todoState.push(newTodo);
         this.setState({
             todo: todoState,
-            todocount: todoCount
         });
         console.log(todoState);
 
@@ -370,7 +346,6 @@ class TrackerView extends React.Component {
         todoRef.on('value', (snapshot) => {
             let tickets = snapshot.val();
             let todoState = [];
-            let todoCount = 0;
             for (let ticket in tickets) {
                 todoState.push({
                     id: ticket,
@@ -378,18 +353,15 @@ class TrackerView extends React.Component {
                     description: tickets[ticket].description,
                     priority: tickets[ticket].priority
                 });
-                todoCount++;
             }
             this.setState({
                 todo: todoState,
-                todocount: todoCount
             });
         });
 
         startedRef.on('value', (snapshot) => {
             let tickets = snapshot.val();
             let startedState = [];
-            let startedCount = 0;
             for (let ticket in tickets) {
                 startedState.push({
                     id: ticket,
@@ -397,18 +369,15 @@ class TrackerView extends React.Component {
                     description: tickets[ticket].description,
                     priority: tickets[ticket].priority
                 });
-                startedCount++;
             }
             this.setState({
                 started: startedState,
-                startedCount: startedCount
             });
         });
 
         completedRef.on('value', (snapshot) => {
             let tickets = snapshot.val();
             let completedState = [];
-            let completedCount = 0;
             for (let ticket in tickets) {
                 completedState.push({
                     id: ticket,
@@ -416,21 +385,11 @@ class TrackerView extends React.Component {
                     description: tickets[ticket].description,
                     priority: tickets[ticket].priority
                 });
-                completedCount++;
             }
             this.setState({
                 completed: completedState,
-                completedcount: completedCount
             });
         });
-
-        // old code, leaving in for ideas or possible implementation
-        /*todoRef.on('value')
-            .then(snapshot => {
-                snapshot.forEach(childSnapshot => {
-                    console.log(cildSnapshot.val());
-                });
-            });*/
         
     }
 
