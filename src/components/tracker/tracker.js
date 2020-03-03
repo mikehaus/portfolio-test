@@ -1,5 +1,6 @@
 import React from 'react';
 import { FlexboxGrid, List, Col, Divider, Button, IconButton, Icon, Popover, Whisper, Panel, PanelGroup, ButtonToolbar } from 'rsuite';
+import { v4 as uuidv4 } from 'uuid';
 import ModalAddForm from './modaladdform';
 import firebase from '../../firebase';
  
@@ -136,7 +137,7 @@ class TrackerView extends React.Component {
             startedcount: 0,
             completedcount: 0,
             edit: false,
-            formData: {}
+            formData: {}, 
         };
         this.addTicket = this.addTicket.bind(this);
         this.closeForm = this.closeForm.bind(this);
@@ -174,7 +175,6 @@ class TrackerView extends React.Component {
         }
     }
 
-
     moveTicket = (direction, ticket, listname) => {
         let list = [];
         let listMoveTo = [];
@@ -199,18 +199,15 @@ class TrackerView extends React.Component {
         let index = list.indexOf(ticket);
         let entry = ticket;
 
-        let listMoveLength = listMoveTo.length;
-        console.log(listMoveLength);
-        entry.id = listMoveLength.toString(10);
+        //let listMoveLength = listMoveTo.length;
+        //entry.id = listMoveLength.toString(10);
         let entryId = entry.id;
 
-        console.log(index);
-        console.log(ticket);
-        
         list.splice(index, 1);
 
         listMoveTo.push(entry);
 
+        console.table(list);
         console.table(listMoveTo);
 
         console.log(ticket.name, ticket.description, ticket.priority);
@@ -227,7 +224,7 @@ class TrackerView extends React.Component {
                 startedcount: startedCount,
             });
             db.ref(`tickets/todo/${entryId}`).remove();
-            db.ref(`tickets/started/${listMoveLength}`).set({
+            db.ref(`tickets/started/${entryId}`).set({
                 name: entry.name,
                 description: entry.description,
                 priority: entry.priority
@@ -239,7 +236,6 @@ class TrackerView extends React.Component {
                 }
             });
         }
-
 
         else if (listname === 'started') {
             let todoCount = this.state.todocount + 1;
@@ -253,7 +249,7 @@ class TrackerView extends React.Component {
                     todocount: todoCount,
                 });
                 db.ref(`tickets/started/${entryId}`).remove();
-                db.ref(`tickets/todo/${listMoveLength}`).set({
+                db.ref(`tickets/todo/${entryId}`).set({
                     name: entry.name,
                     description: entry.description,
                     priority: entry.priority
@@ -273,7 +269,8 @@ class TrackerView extends React.Component {
                     completedcount: completedCount
                 });
                 db.ref(`tickets/started/${entryId}`).remove();
-                db.ref(`tickets/completed/${listMoveLength}`).set({
+                db.ref(`tickets/completed/${entryId}`).set({
+                //db.ref(`tickets/completed/${listMoveLength}`).set({
                     name: entry.name,
                     description: entry.description,
                     priority: entry.priority
@@ -297,7 +294,7 @@ class TrackerView extends React.Component {
                 startedcount: startedCount
             });
             db.ref(`tickets/completed/${entryId}`).remove();
-            db.ref(`tickets/started/${listMoveLength}`).set({
+            db.ref(`tickets/started/${entryId}`).set({
                 name: entry.name,
                 description: entry.description,
                 priority: entry.priority
@@ -339,8 +336,9 @@ class TrackerView extends React.Component {
     // After it changes state, it pushes info into db
     processForm = (formKey) => {
         let todoState = this.state.todo;
-        let todoCount = this.state.todocount + 1;
-        formKey.id = todoCount;
+        let todoCount = this.state.todocount;
+        //formKey.id = todoCount.toString(10);
+        formKey.id = uuidv4();
         let newTodo = {
             name: formKey.name,
             description: formKey.description,
@@ -354,10 +352,11 @@ class TrackerView extends React.Component {
         });
         console.log(todoState);
 
-        firebase.database().ref(`tickets/todo/${todoCount}`).set({
+        firebase.database().ref(`tickets/todo/${formKey.id}`).set({
             name: newTodo.name,
             priority: newTodo.priority,
-            description: newTodo.description, 
+            description: newTodo.description,
+            id: formKey.id, 
         });
     }
 
@@ -366,7 +365,7 @@ class TrackerView extends React.Component {
         const todoRef = firebase.database().ref('tickets/todo');
         const startedRef = firebase.database().ref('tickets/started');
         const completedRef = firebase.database().ref('tickets/completed');
-        
+
         // This takes the value of each todo ticket in tickets fb db and puts values in array, then sets state after
         todoRef.on('value', (snapshot) => {
             let tickets = snapshot.val();
@@ -429,7 +428,7 @@ class TrackerView extends React.Component {
         /*todoRef.on('value')
             .then(snapshot => {
                 snapshot.forEach(childSnapshot => {
-                    console.log(childSnapshot.val());
+                    console.log(cildSnapshot.val());
                 });
             });*/
         

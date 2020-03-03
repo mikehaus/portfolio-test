@@ -90,7 +90,6 @@ class ModalAddForm extends React.Component {
                     this.setState({ formValue });
                 }}
                 onCheck={formError => {
-                    console.log(formError, 'formError');
                     this.setState({ formError });
                 }}
                 formValue={this.props.formValue}
