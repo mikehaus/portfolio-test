@@ -34,13 +34,8 @@ class ModalAddForm extends React.Component {
         const formValue = {
           name: '',
           priority: 'Low',
-          description: '',
+          description: ''
         };
-        /*{
-            name: '',
-            priority: 'Low',
-            description: '',
-        };*/
         this.state = {
             formValue: formValue,
             formError: {},
@@ -81,7 +76,7 @@ class ModalAddForm extends React.Component {
       render() {
 
         const { formError } = this.state;
-        const formValue = this.props.formData;
+
         return (
           <div>
             <Modal show={this.props.show} onHide={this.close} size="xs">
@@ -99,7 +94,7 @@ class ModalAddForm extends React.Component {
                     console.log(formError, 'formError');
                     this.setState({ formError });
                 }}
-                formValue={formValue}
+                formValue={this.props.formValue}
                 model={model}
                 >
                 <CustomField
@@ -124,15 +119,21 @@ class ModalAddForm extends React.Component {
                     label="Description"
                     componentClass="textarea"
                     rows={5}
-                    error={formError.priority}
+                    error={formError.description}
                 />
                 </Form>
               </Modal.Body>
               <Modal.Footer>
-                <Button onClick={this.handleSubmit} appearance="primary" color="green">
+                <Button 
+                  onClick={this.handleSubmit} 
+                  appearance="primary" 
+                  color="green">
                   Submit
                 </Button>
-                <Button onClick={this.props.close} appearance="primary" color="red">
+                <Button 
+                  onClick={this.props.close} 
+                  appearance="primary" 
+                  color="red">
                   Cancel
                 </Button>
               </Modal.Footer>
