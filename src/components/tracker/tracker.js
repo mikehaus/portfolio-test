@@ -94,7 +94,7 @@ function PanelList(props) {
                     trigger='hover'>
                     <Button 
                         onClick={() => {
-                            props.editTicket(ticket.id, props.listName)}} 
+                            props.editTicket(ticket, props.listName)}} 
                         color="yellow">
                             Edit
                     </Button>
@@ -133,13 +133,14 @@ class TrackerView extends React.Component {
             todo: [],
             started: [],
             completed: [],
-            edit: false,
-            formData: {}, 
+            edit: false
         };
         this.addTicket = this.addTicket.bind(this);
         this.closeForm = this.closeForm.bind(this);
         this.moveTicket = this.moveTicket.bind(this);
         this.editTicket = this.editTicket.bind(this);
+        this.processForm = this.processForm.bind(this);
+        this.processFormEdit = this.processFormEdit.bind(this);
     }
 
     // opens form after add button is pressed
@@ -172,9 +173,14 @@ class TrackerView extends React.Component {
         }
     }
 
+
+    // moveTicket takes array that ticket is located in and grabs the id,
+    // then updates array and adds ticket to new array. Writes data to database to adjust according to movement
     moveTicket = (direction, ticket, listname) => {
         let list = [];
         let listMoveTo = [];
+
+        // Decides which array to use
         if (listname === 'todo') {
             list = this.state.todo;
             listMoveTo = this.state.started;
@@ -193,6 +199,7 @@ class TrackerView extends React.Component {
             listMoveTo = this.state.started;
         }
 
+        // gets index of ticket id, splices array and moves ticket to other array
         let index = list.indexOf(ticket);
         let entry = ticket;
 
@@ -202,13 +209,9 @@ class TrackerView extends React.Component {
 
         listMoveTo.push(entry);
 
-        console.table(list);
-        console.table(listMoveTo);
-
-        console.log(ticket.name, ticket.description, ticket.priority);
-
         let db = firebase.database();
 
+        // if list is todo, removes entry from todo db and moves it to started
         if (listname === 'todo') {
             this.setState({
                 todo: list,
@@ -228,6 +231,7 @@ class TrackerView extends React.Component {
             });
         }
 
+        // if list is started, removes entry and moves depending on direction, left is todo, right is completed
         else if (listname === 'started') {
             if (direction === 'left') {
                 this.setState({
@@ -267,6 +271,7 @@ class TrackerView extends React.Component {
             }
         }
 
+        // if list is completed, removes entry from completed db and moves it to started
         else if (listname === 'completed') {
             this.setState({
                 completed: list,
@@ -287,6 +292,7 @@ class TrackerView extends React.Component {
         }
     }
 
+    // WILL DO LATER
     editTicket = (id, listname) => {
         let list = [];
         if (listname === 'todo') {
@@ -299,7 +305,8 @@ class TrackerView extends React.Component {
             list = this.state.completed
         }
 
-        let entry = list[id];
+        let index = list.indexOf(id)
+        let entry = list[index];
         console.log(entry);
 
         this.setState({
@@ -335,6 +342,13 @@ class TrackerView extends React.Component {
             id: formKey.id, 
         });
     }
+
+    // to implement takes info from edited form and processes to edit correct entry
+    processFormEdit = (formKey, formID) => {
+        console.log(formID);
+    }
+
+
 
     // Takes all data from Firebase DB and puts into state arrays for retrieval on page
     componentWillMount = () => {
@@ -390,11 +404,9 @@ class TrackerView extends React.Component {
                 completed: completedState,
             });
         });
-        
     }
 
     render() { 
-        
         if (!this.props.displayed) {
             return null;
         }
@@ -416,11 +428,11 @@ class TrackerView extends React.Component {
                         onMouseLeave={this.handleAddBtnMouseleave}/>
                 </Whisper>
                 <ModalAddForm 
-                    formData={this.state.formData}
                     show={this.state.formOpen}
                     edit={this.state.edit} 
                     close={this.closeForm}
-                    formSubmitted={this.processForm} />
+                    formSubmitted={this.processForm}
+                    formSubmitEdit={this.processFormEdit} />
                 <FlexboxGrid 
                     justify='space-around' 
                     style={TRACKER_STYLES.main}>

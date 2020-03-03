@@ -39,12 +39,13 @@ class ModalAddForm extends React.Component {
         this.state = {
             formValue: formValue,
             formError: {},
-            show: false
+            show: false,
         };
         this.close = this.close.bind(this);
         this.open = this.open.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleEdit = this.handleEdit.bind(this);
       }
 
       handleSubmit() {
@@ -58,12 +59,25 @@ class ModalAddForm extends React.Component {
         this.props.close();
       }
 
+      handleEdit() {
+        const { formValue } = this.state;
+        if (!this.form.check()) {
+          Alert.error('Please Input all Values!');
+          return;
+        }
+        Alert.success('Success');
+        this.props.formSubmitEdit(formValue, this.props.formID);
+        this.props.close();
+      }
+
       close() {
         this.setState({ show: false });
       }
 
       open() {
-        this.setState({ show: true });
+        this.setState({ 
+          show: true,
+        });
       }
 
       handleChange(value) {
@@ -92,7 +106,7 @@ class ModalAddForm extends React.Component {
                 onCheck={formError => {
                     this.setState({ formError });
                 }}
-                formValue={this.props.formValue}
+                formValue={this.props.formValue }
                 model={model}
                 >
                 <CustomField
