@@ -2,19 +2,20 @@ import React from 'react';
 import { FlexboxGrid, List, Col, Divider, Button, IconButton, Icon, Popover, Whisper, Panel, PanelGroup, ButtonToolbar } from 'rsuite';
 import { v4 as uuidv4 } from 'uuid';
 import ModalAddForm from './modaladdform';
+import TrackerNav from './trackernav';
 import firebase from '../../firebase';
  
 const TRACKER_STYLES = {
     main: {
-        width: '100% - 65px',
-        height: '100vh',
+        width: '100vw - 65px',
+        height: '90vh',
         overflowY: 'auto',
         overflowX: 'none',
         position: 'absolute',
         left: '65px',
-        right: '50px',
+        right: '20px',
         top: '10px',
-        bottom: '10px',
+        bottom: '100px',
         padding: '10px',
     },
     header: {
@@ -23,8 +24,9 @@ const TRACKER_STYLES = {
     },
     btn: {
         position: 'fixed',
-        top: 10,
-        right: 10,
+        top: '2vh',
+        right: '2vw',
+        zIndex: 1
     },
     listStyle: {
         marginTop: 10,
@@ -433,6 +435,7 @@ class TrackerView extends React.Component {
                     close={this.closeForm}
                     formSubmitted={this.processForm}
                     formSubmitEdit={this.processFormEdit} />
+                <TrackerNav style={TRACKER_STYLES.trackerNav} />
                 <FlexboxGrid 
                     justify='space-around' 
                     style={TRACKER_STYLES.main}>
