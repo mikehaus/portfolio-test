@@ -7,7 +7,7 @@ import 'react-open-weather/lib/css/ReactWeather.css';
  
 const WEATHER_STYLES = {
     main: {
-        width: '95vw',
+        width: '90vw',
         height: '100vh',
         overflowY: 'auto',
         overflowX: 'none',
@@ -21,10 +21,11 @@ const WEATHER_STYLES = {
     table: {
         position: 'relative',
         top: '50%',
-        width: '70%',
+        maxWidth: '90%',
+        minWidth: '80%',
         height: '10%',
         display: 'block',
-        marginLeft: 'auto',
+        left: '10px',
         marginRight: 'auto'
     }
 }

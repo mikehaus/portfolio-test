@@ -4,11 +4,12 @@ import myKeys from '../../data/apikeys';
  
 const MAP_STYLES = {
     display: 'block',
-    width: '90%',
+    maxWidth: '95%',
+    minWidth: '60%',
     height: '40%',
     top: 10,
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    marginLeft: '10px',
+    marginRight: '50px',
 };
 
 
