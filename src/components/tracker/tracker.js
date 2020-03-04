@@ -135,7 +135,8 @@ class TrackerView extends React.Component {
             todo: [],
             started: [],
             completed: [],
-            edit: false
+            edit: false,
+            category: 'Frontend'
         };
         this.addTicket = this.addTicket.bind(this);
         this.closeForm = this.closeForm.bind(this);
@@ -143,6 +144,7 @@ class TrackerView extends React.Component {
         this.editTicket = this.editTicket.bind(this);
         this.processForm = this.processForm.bind(this);
         this.processFormEdit = this.processFormEdit.bind(this);
+        this.changeTicketCategory = this.changeTicketCategory.bind(this);
     }
 
     // opens form after add button is pressed
@@ -351,6 +353,22 @@ class TrackerView extends React.Component {
     }
 
 
+    changeTicketCategory = (activeKey) => {
+        console.log(activeKey);
+        if (activeKey === 'frontend') {
+
+        }
+        else if (activeKey === 'backend') {
+
+        }
+        else if (activeKey === 'api') {
+
+        }
+        else if (activeKey === 'testing') {
+
+        }
+    }
+
 
     // Takes all data from Firebase DB and puts into state arrays for retrieval on page
     componentWillMount = () => {
@@ -435,7 +453,9 @@ class TrackerView extends React.Component {
                     close={this.closeForm}
                     formSubmitted={this.processForm}
                     formSubmitEdit={this.processFormEdit} />
-                <TrackerNav style={TRACKER_STYLES.trackerNav} />
+                <TrackerNav 
+                    style={TRACKER_STYLES.trackerNav}
+                    changeTicketCategory={this.changeTicketCategory} />
                 <FlexboxGrid 
                     justify='space-around' 
                     style={TRACKER_STYLES.main}>

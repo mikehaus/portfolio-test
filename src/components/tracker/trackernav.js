@@ -48,6 +48,7 @@ class TrackerNav extends React.Component {
         this.setState({
             active: activeKey
         });
+        this.props.changeTicketCategory(activeKey);
     }
 
     render() { 
