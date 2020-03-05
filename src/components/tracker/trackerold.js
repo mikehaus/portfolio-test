@@ -3,7 +3,7 @@ import { FlexboxGrid, List, Col, Divider, Button, IconButton, Icon, Popover, Whi
 import { v4 as uuidv4 } from 'uuid';
 import ModalAddForm from './modaladdform';
 import TrackerNav from './trackernav';
-import firebase from '../../firebase';
+import firebase from '../../trackerfirebase';
  
 const TRACKER_STYLES = {
     main: {
@@ -136,7 +136,7 @@ class TrackerView extends React.Component {
             started: [],
             completed: [],
             edit: false,
-            category: 'frontend'
+            category: 'Frontend'
         };
         this.addTicket = this.addTicket.bind(this);
         this.closeForm = this.closeForm.bind(this);
@@ -145,7 +145,6 @@ class TrackerView extends React.Component {
         this.processForm = this.processForm.bind(this);
         this.processFormEdit = this.processFormEdit.bind(this);
         this.changeTicketCategory = this.changeTicketCategory.bind(this);
-        this.populateViewWithTickets = this.populateViewWithTickets.bind(this);
     }
 
     // opens form after add button is pressed
@@ -222,8 +221,8 @@ class TrackerView extends React.Component {
                 todo: list,
                 started: listMoveTo,
             });
-            db.ref(`tracker/tickets/${this.state.category}/todo/${entryId}`).remove();
-            db.ref(`tracker/tickets/${this.state.category}/started/${entryId}`).set({
+            db.ref(`tickets/todo/${entryId}`).remove();
+            db.ref(`tickets/started/${entryId}`).set({
                 name: entry.name,
                 description: entry.description,
                 priority: entry.priority
@@ -243,8 +242,8 @@ class TrackerView extends React.Component {
                     started: list,
                     todo: listMoveTo,
                 });
-                db.ref(`tracker/tickets/${this.state.category}/started/${entryId}`).remove();
-                db.ref(`tracker/tickets/${this.state.category}/todo/${entryId}`).set({
+                db.ref(`tickets/started/${entryId}`).remove();
+                db.ref(`tickets/todo/${entryId}`).set({
                     name: entry.name,
                     description: entry.description,
                     priority: entry.priority
@@ -261,8 +260,8 @@ class TrackerView extends React.Component {
                     started: list,
                     completed: listMoveTo,
                 });
-                db.ref(`tracker/tickets/${this.state.category}/started/${entryId}`).remove();
-                db.ref(`tracker/tickets/${this.state.category}/completed/${entryId}`).set({
+                db.ref(`tickets/started/${entryId}`).remove();
+                db.ref(`tickets/completed/${entryId}`).set({
                     name: entry.name,
                     description: entry.description,
                     priority: entry.priority
@@ -282,8 +281,8 @@ class TrackerView extends React.Component {
                 completed: list,
                 started: listMoveTo,
             });
-            db.ref(`tracker/tickets/${this.state.category}/completed/${entryId}`).remove();
-            db.ref(`tracker/tickets/${this.state.category}/started/${entryId}`).set({
+            db.ref(`tickets/completed/${entryId}`).remove();
+            db.ref(`tickets/started/${entryId}`).set({
                 name: entry.name,
                 description: entry.description,
                 priority: entry.priority
@@ -340,7 +339,7 @@ class TrackerView extends React.Component {
         });
         console.log(todoState);
 
-        firebase.database().ref(`tracker/tickets/${this.state.category}/todo/${formKey.id}`).set({
+        firebase.database().ref(`tickets/todo/${formKey.id}`).set({
             name: newTodo.name,
             priority: newTodo.priority,
             description: newTodo.description,
@@ -356,20 +355,28 @@ class TrackerView extends React.Component {
 
     changeTicketCategory = (activeKey) => {
         console.log(activeKey);
-        this.setState({
-            category: activeKey
-        });
-        this.populateViewWithTickets(activeKey);
+        if (activeKey === 'frontend') {
 
-        
+        }
+        else if (activeKey === 'backend') {
+
+        }
+        else if (activeKey === 'api') {
+
+        }
+        else if (activeKey === 'testing') {
+
+        }
     }
 
 
-    populateViewWithTickets = (activeKey) => {
-        let todoRef = firebase.database().ref(`tracker/tickets/${activeKey}/todo`);
-        let startedRef = firebase.database().ref(`tracker/tickets/${activeKey}/started`);
-        let completedRef = firebase.database().ref(`tracker/tickets/${activeKey}/completed`);
+    // Takes all data from Firebase DB and puts into state arrays for retrieval on page
+    componentWillMount = () => {
+        const todoRef = firebase.database().ref('tickets/todo');
+        const startedRef = firebase.database().ref('tickets/started');
+        const completedRef = firebase.database().ref('tickets/completed');
 
+        // This takes the value of each todo ticket in tickets fb db and puts values in array, then sets state after
         todoRef.on('value', (snapshot) => {
             let tickets = snapshot.val();
             let todoState = [];
@@ -418,14 +425,6 @@ class TrackerView extends React.Component {
             });
         });
     }
-
-
-    // Takes all data from Firebase DB and puts into state arrays for retrieval on page
-    // only runs on startup
-    componentWillMount = () => {
-        this.populateViewWithTickets('frontend');
-    }
-
 
     render() { 
         if (!this.props.displayed) {
