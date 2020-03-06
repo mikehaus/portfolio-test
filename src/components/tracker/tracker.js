@@ -56,6 +56,10 @@ const editspeaker = (
     <Popover title="Edit Ticket" />
 );
 
+const archivespeaker = (
+    <Popover title="Close and Archive Ticket" />
+)
+
 /* PanelList is component to list all tickets in a category 
     It has a listItems const which has a list of all the panels in the list that 
     populate info inside based on info received in props (usually called at componentDidMount in parent component)
@@ -113,6 +117,19 @@ function PanelList(props) {
                             color="green"/> 
                     </Whisper>
                     : null }
+                {!right ?
+                    <Whisper
+                        placement="bottom"
+                        speaker={archivespeaker}
+                        trigger='hover'>
+                        <Button 
+                            onClick={() => {
+                                props.closeTicket(ticket, props.listName)}} 
+                            color="violet"> 
+                            Close
+                        </Button>
+                    </Whisper>
+                    : null }
             </ButtonToolbar>
         </Panel>
     );
@@ -146,6 +163,7 @@ class TrackerView extends React.Component {
         this.processFormEdit = this.processFormEdit.bind(this);
         this.changeTicketCategory = this.changeTicketCategory.bind(this);
         this.populateViewWithTickets = this.populateViewWithTickets.bind(this);
+        this.closeTicketAndArchive = this.closeTicketAndArchive.bind(this);
     }
 
     // opens form after add button is pressed
@@ -295,6 +313,39 @@ class TrackerView extends React.Component {
                 }
             });
         }
+    }
+
+
+    // takes current ticket and moves to archived part of database
+    closeTicketAndArchive = (ticket, listname) => {
+        let list = this.state.completed;
+
+        let index = list.indexOf(ticket);
+
+        let entry = ticket;
+
+        let entryId = entry.id;
+
+        list.splice(index, 1);
+
+        let db = firebase.database();
+
+        // if list is todo, removes entry from todo db and moves it to started
+        this.setState({
+            completed: list,
+        });
+        db.ref(`tracker/tickets/${this.state.category}/completed/${entryId}`).remove();
+        db.ref(`tracker/tickets/${this.state.category}/archived/${entryId}`).set({
+            name: entry.name,
+            description: entry.description,
+            priority: entry.priority
+        }, function(error) {
+            if (error) {
+                console.log('ticket failed to archive');
+            } else {
+                console.log('ticket archived successfully');
+            }
+        });
     }
 
     // WILL DO LATER
@@ -455,6 +506,7 @@ class TrackerView extends React.Component {
                     formSubmitted={this.processForm}
                     formSubmitEdit={this.processFormEdit} />
                 <TrackerNav 
+                    activeKey={this.state.category}
                     style={TRACKER_STYLES.trackerNav}
                     changeTicketCategory={this.changeTicketCategory} />
                 <FlexboxGrid 
@@ -503,6 +555,7 @@ class TrackerView extends React.Component {
                         <h4 style={TRACKER_STYLES.header}>Completed</h4>
                         <Divider />
                         <PanelList 
+                            closeTicket={this.closeTicketAndArchive}
                             listName={'completed'}
                             moveLeft={this.moveTicket} 
                             moveRight={this.moveTicket}

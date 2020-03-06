@@ -44,6 +44,12 @@ class TrackerNav extends React.Component {
         this.handleSelect = this.handleSelect.bind(this);
     }
 
+    componentWillMount = () => {
+        this.setState({
+            active: this.props.activeKey
+        });
+    } 
+
     handleSelect(activeKey) {
         this.setState({
             active: activeKey
