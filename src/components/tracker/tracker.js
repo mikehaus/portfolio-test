@@ -394,7 +394,14 @@ class TrackerView extends React.Component {
             console.log(todoState);
         }
 
-        firebase.database().ref(`tracker/tickets/${formKey.category}/todo/${formKey.id}`).set({
+        let category = formKey.category;
+
+        console.log(category);
+        if (category === undefined) {
+            category = this.state.category;
+        }
+
+        firebase.database().ref(`tracker/tickets/${category}/todo/${formKey.id}`).set({
             name: newTodo.name,
             priority: newTodo.priority,
             description: newTodo.description,
