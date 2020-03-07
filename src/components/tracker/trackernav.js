@@ -17,7 +17,7 @@ const TRACKER_NAV_STYLES = {
 }
 
 
-const TopNav = ({ active, onSelect, ...props }) => {
+const BottomNav = ({ active, onSelect, ...props }) => {
     return (
       <Nav 
         {...props} 
@@ -51,9 +51,11 @@ class TrackerNav extends React.Component {
     } 
 
     handleSelect(activeKey) {
+
         this.setState({
             active: activeKey
-        });
+        })
+        
         this.props.changeTicketCategory(activeKey);
     }
 
@@ -61,7 +63,11 @@ class TrackerNav extends React.Component {
         const { active } = this.state;
         return(
             <div>
-                <TopNav active={active} style={TRACKER_NAV_STYLES.main} onSelect={this.handleSelect} />
+                <BottomNav
+                    frontend={this.state.frontend}
+                    active={active}
+                    style={TRACKER_NAV_STYLES.main} 
+                    onSelect={this.handleSelect} />
             </div>
         );
     }

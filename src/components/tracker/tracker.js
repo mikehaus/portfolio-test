@@ -399,7 +399,7 @@ class TrackerView extends React.Component {
             priority: newTodo.priority,
             description: newTodo.description,
             id: formKey.id, 
-        });
+        })
     }
 
     // to implement takes info from edited form and processes to edit correct entry
@@ -419,7 +419,11 @@ class TrackerView extends React.Component {
     }
 
 
+    // populates view with all tickets from category submitted
+    // tried breaking function that had call for each ref but slowed performance
+
     populateViewWithTickets = (activeKey) => {
+
         let todoRef = firebase.database().ref(`tracker/tickets/${activeKey}/todo`);
         let startedRef = firebase.database().ref(`tracker/tickets/${activeKey}/started`);
         let completedRef = firebase.database().ref(`tracker/tickets/${activeKey}/completed`);
