@@ -1,6 +1,6 @@
 import React from 'react';
-import { Form, FormGroup, FormControl, ControlLabel, HelpBlock, Modal, Button, Schema, Alert, RadioGroup, Radio } from 'rsuite';
- 
+import { Form, FormGroup, FormControl, ControlLabel, HelpBlock, Modal, Button, Schema, Alert, RadioGroup, Radio, SelectPicker } from 'rsuite';
+
 const { StringType } = Schema.Types;
 const model = Schema.Model({
   name: StringType().isRequired('This field is required.'),
@@ -34,7 +34,8 @@ class ModalAddForm extends React.Component {
         const formValue = {
           name: '',
           priority: 'Low',
-          description: ''
+          description: '',
+          category: ''
         };
         this.state = {
             formValue: formValue,
@@ -93,7 +94,10 @@ class ModalAddForm extends React.Component {
 
         return (
           <div>
-            <Modal show={this.props.show} onHide={this.close} size="xs">
+            <Modal 
+              show={this.props.show} 
+              onHide={this.close} 
+              size="xs">
               <Modal.Header>
                 <Modal.Title>{this.props.edit ? 'Edit Ticket': 'New Ticket'}</Modal.Title>
               </Modal.Header>
@@ -102,11 +106,12 @@ class ModalAddForm extends React.Component {
                 ref={ref => (this.form = ref)}
                 onChange={formValue => {
                     this.setState({ formValue });
+                    console.log(formValue);
                 }}
                 onCheck={formError => {
                     this.setState({ formError });
                 }}
-                formValue={this.props.formValue }
+                formValue={this.props.formValue}
                 model={model}
                 >
                 <CustomField
@@ -132,6 +137,18 @@ class ModalAddForm extends React.Component {
                     componentClass="textarea"
                     rows={5}
                     error={formError.description}
+                />
+                <CustomField
+                  name="category"
+                  label="Category"
+                  accepter={SelectPicker}
+                  style={{ display: 'inline-block', width: 240 }}
+                  data={[
+                    { label: 'Frontend', value: 'frontend' },
+                    { label: 'Backend', value: 'backend' },
+                    { label: 'API', value: 'api' },
+                    { label: 'Testing', value: 'testing' },
+                  ]}
                 />
                 </Form>
               </Modal.Body>

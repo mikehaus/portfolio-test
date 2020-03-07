@@ -373,11 +373,10 @@ class TrackerView extends React.Component {
     }
 
 
-    // function gets info from form and pushes that into state To Do
-    // because it updates state, it rerenders the todo list
-    // After it changes state, it pushes info into db
+    // function gets info from form and submits into
+    // selected category todo db
+    // If category match, updates todolist
     processForm = (formKey) => {
-        let todoState = this.state.todo;
         formKey.id = uuidv4();
         let newTodo = {
             name: formKey.name,
@@ -385,13 +384,17 @@ class TrackerView extends React.Component {
             priority: formKey.priority,
             id: formKey.id
         };
-        todoState.push(newTodo);
-        this.setState({
-            todo: todoState,
-        });
-        console.log(todoState);
 
-        firebase.database().ref(`tracker/tickets/${this.state.category}/todo/${formKey.id}`).set({
+        if (this.state.category === formKey.category) {
+            let todoState = this.state.todo;
+            todoState.push(newTodo);
+            this.setState({
+                todo: todoState,
+            });
+            console.log(todoState);
+        }
+
+        firebase.database().ref(`tracker/tickets/${formKey.category}/todo/${formKey.id}`).set({
             name: newTodo.name,
             priority: newTodo.priority,
             description: newTodo.description,
