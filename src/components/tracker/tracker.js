@@ -35,7 +35,7 @@ const TRACKER_STYLES = {
         textAlign: 'center',
         margin: '10px',
     },
-    addBtn: {
+    addTicketBtn: {
         position: 'fixed',
         top: '5px',
         left: '65px',
@@ -44,6 +44,12 @@ const TRACKER_STYLES = {
     navBtn: {
         position: 'fixed',
         top: '5px',
+        right: '10px',
+        zIndex: 1
+    },
+    addProjectBtn: {
+        position: 'fixed',
+        top: '50px',
         right: '10px',
         zIndex: 1
     },
@@ -81,6 +87,10 @@ const archivespeaker = (
 
 const projectnavspeaker = (
     <Popover title="Show Project Nav" />
+);
+
+const addprojectspeaker = (
+    <Popover title="Add Project" />
 );
 
 /* PanelList is component to list all tickets in a category 
@@ -538,12 +548,22 @@ class TrackerView extends React.Component {
                     speaker={addticketspeaker}
                     trigger='hover'>
                     <IconButton 
-                        style={TRACKER_STYLES.addBtn}
+                        style={TRACKER_STYLES.addTicketBtn}
                         icon={<Icon icon="plus" />} 
                         onClick={this.addTicket}
                         appearance='primary'
                         color='green'
-                        size='lg'/>
+                        size='md'/>
+                </Whisper>
+                <Whisper
+                    placement="bottomEnd"
+                    speaker={addprojectspeaker}
+                    trigger='hover'>
+                    <IconButton 
+                        style={TRACKER_STYLES.addProjectBtn}
+                        icon={<Icon icon="plus" />} 
+                        appearance='default'
+                        size='xs'/>
                 </Whisper>
                 <Whisper
                     placement="bottomEnd"
@@ -554,7 +574,7 @@ class TrackerView extends React.Component {
                         icon={<Icon icon="bars" />} 
                         onClick={this.showProjectNav}
                         appearance='default'
-                        size='lg'/>
+                        size='md'/>
                 </Whisper>
                 <ModalAddForm 
                     show={this.state.formOpen}
