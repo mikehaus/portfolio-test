@@ -2,7 +2,8 @@ import React from 'react';
 import { FlexboxGrid, List, Col, Divider, Button, IconButton, Icon, Popover, Whisper, Panel, PanelGroup, ButtonToolbar } from 'rsuite';
 import { v4 as uuidv4 } from 'uuid';
 import ModalAddForm from './modaladdform';
-import TrackerNav from './trackernav';
+import CategoryNav from './categorynav';
+import ProjectNav from './projectnav';
 import firebase from '../../firebase';
  
 const TRACKER_STYLES = {
@@ -13,7 +14,7 @@ const TRACKER_STYLES = {
         overflowX: 'none',
         position: 'absolute',
         left: '65px',
-        right: '20px',
+        right: '10px',
         top: '10px',
         bottom: '100px',
         padding: '10px',
@@ -22,10 +23,16 @@ const TRACKER_STYLES = {
         textAlign: 'center',
         margin: '10px',
     },
-    btn: {
+    addBtn: {
         position: 'fixed',
-        top: '2vh',
-        right: '2vw',
+        top: '5px',
+        left: '65px',
+        zIndex: 1
+    },
+    navBtn: {
+        position: 'fixed',
+        top: '5px',
+        right: '10px',
         zIndex: 1
     },
     listStyle: {
@@ -58,7 +65,11 @@ const editspeaker = (
 
 const archivespeaker = (
     <Popover title="Close and Archive Ticket" />
-)
+);
+
+const projectnavspeaker = (
+    <Popover title="Show Project Nav" />
+);
 
 /* PanelList is component to list all tickets in a category 
     It has a listItems const which has a list of all the panels in the list that 
@@ -137,7 +148,7 @@ function PanelList(props) {
         <PanelGroup accordion>
             {listItems}
         </PanelGroup>
-    )
+    );
 }
 
 
@@ -149,6 +160,7 @@ class TrackerView extends React.Component {
         super(props);
         this.state = {
             formOpen: false,
+            projectNav: false,
             todo: [],
             started: [],
             completed: [],
@@ -164,6 +176,7 @@ class TrackerView extends React.Component {
         this.changeTicketCategory = this.changeTicketCategory.bind(this);
         this.populateViewWithTickets = this.populateViewWithTickets.bind(this);
         this.closeTicketAndArchive = this.closeTicketAndArchive.bind(this);
+        this.showProjectNav = this.showProjectNav.bind(this);
     }
 
     // opens form after add button is pressed
@@ -485,9 +498,17 @@ class TrackerView extends React.Component {
     }
 
 
+    showProjectNav = () => {
+        console.log('showing Project Nav');
+        this.setState({
+            projectNav: !this.state.projectNav
+        });
+    }
+
+
     // Takes all data from Firebase DB and puts into state arrays for retrieval on page
     // only runs on startup
-    componentWillMount = () => {
+    componentDidMount = () => {
         this.populateViewWithTickets('frontend');
     }
 
@@ -500,18 +521,27 @@ class TrackerView extends React.Component {
         return (
             <div>
                 <Whisper
-                    placement="bottomEnd"
+                    placement="bottomStart"
                     speaker={addticketspeaker}
                     trigger='hover'>
                     <IconButton 
-                        style={TRACKER_STYLES.btn}
+                        style={TRACKER_STYLES.addBtn}
                         icon={<Icon icon="plus" />} 
                         onClick={this.addTicket}
                         appearance='primary'
                         color='green'
-                        size='lg'
-                        onMouseEnter={this.handleAddBtnMouseover}
-                        onMouseLeave={this.handleAddBtnMouseleave}/>
+                        size='lg'/>
+                </Whisper>
+                <Whisper
+                    placement="bottomEnd"
+                    speaker={projectnavspeaker}
+                    trigger='hover'>
+                    <IconButton 
+                        style={TRACKER_STYLES.navBtn}
+                        icon={<Icon icon="bars" />} 
+                        onClick={this.showProjectNav}
+                        appearance='default'
+                        size='lg'/>
                 </Whisper>
                 <ModalAddForm 
                     show={this.state.formOpen}
@@ -519,10 +549,12 @@ class TrackerView extends React.Component {
                     close={this.closeForm}
                     formSubmitted={this.processForm}
                     formSubmitEdit={this.processFormEdit} />
-                <TrackerNav 
+                <CategoryNav 
                     activeKey={this.state.category}
-                    style={TRACKER_STYLES.trackerNav}
+                    style={TRACKER_STYLES.categoryNav}
                     changeTicketCategory={this.changeTicketCategory} />
+                <ProjectNav
+                    show={this.props.projectNav} />
                 <FlexboxGrid 
                     justify='space-around' 
                     style={TRACKER_STYLES.main}>

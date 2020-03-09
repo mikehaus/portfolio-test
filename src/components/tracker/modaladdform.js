@@ -7,12 +7,16 @@ const model = Schema.Model({
   description: StringType().isRequired('Please input a description for your ticket')
 });
 
+const FORM_STYLES = {
+
+}
+
 class CustomField extends React.PureComponent {
   render() {
     const { name, message, label, accepter, error, ...props } = this.props;
     return (
       <FormGroup className={error ? 'has-error' : ''}>
-        <ControlLabel>{label} </ControlLabel>
+        <ControlLabel>{label}</ControlLabel>
         <FormControl
           name={name}
           accepter={accepter}
@@ -142,7 +146,7 @@ class ModalAddForm extends React.Component {
                   name="category"
                   label="Category"
                   accepter={SelectPicker}
-                  style={{ display: 'inline-block', width: 240 }}
+                  style={{ display: 'inline-block', width: 300 }}
                   data={[
                     { label: 'Frontend', value: 'frontend' },
                     { label: 'Backend', value: 'backend' },

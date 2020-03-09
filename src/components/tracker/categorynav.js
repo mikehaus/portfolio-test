@@ -34,7 +34,7 @@ const BottomNav = ({ active, onSelect, ...props }) => {
     );
   };
 
-class TrackerNav extends React.Component {
+class CategoryNav extends React.Component {
 
     constructor(props) {
         super(props);
@@ -73,4 +73,4 @@ class TrackerNav extends React.Component {
     }
 }
 
-export default TrackerNav;
+export default CategoryNav;
