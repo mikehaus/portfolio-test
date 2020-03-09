@@ -5,10 +5,9 @@ import firebase from '../../firebase';
 const PROJECT_NAV_STYLES = {
     main: {
         position: 'fixed',
-        right: '50px',
         zIndex: 1,
+        right: 10,
         top: '100px',
-        backgroundColor: 'white',
     },
 }
 
@@ -20,10 +19,11 @@ const SideNav = ({ active, onSelect, ...props }) => {
         <Nav {...props} 
             vertical 
             activeKey={active} 
-            onSelect={onSelect}>
+            onSelect={onSelect}
+            pullRight>
             {projectList.map((project) =>
                 <Nav.Item
-                eventKey={project.id}>
+                key={project.id}>
                     {project.name}
                 </Nav.Item>
             )}

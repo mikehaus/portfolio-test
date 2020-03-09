@@ -7,7 +7,7 @@ import ProjectNav from './projectnav';
 import firebase from '../../firebase';
  
 const TRACKER_STYLES = {
-    main: {
+    mainNoSideNav: {
         width: '100vw - 65px',
         height: '90vh',
         overflowY: 'auto',
@@ -15,6 +15,18 @@ const TRACKER_STYLES = {
         position: 'absolute',
         left: '65px',
         right: '10px',
+        top: '10px',
+        bottom: '100px',
+        padding: '10px',
+    },
+    mainSideNav: {
+        width: '100vw - 165px',
+        height: '90vh',
+        overflowY: 'auto',
+        overflowX: 'none',
+        position: 'absolute',
+        left: '65px',
+        right: '100px',
         top: '10px',
         bottom: '100px',
         padding: '10px',
@@ -500,6 +512,7 @@ class TrackerView extends React.Component {
 
     showProjectNav = () => {
         console.log('showing Project Nav');
+        console.log(this.state.projectNav);
         this.setState({
             projectNav: !this.state.projectNav
         });
@@ -554,10 +567,11 @@ class TrackerView extends React.Component {
                     style={TRACKER_STYLES.categoryNav}
                     changeTicketCategory={this.changeTicketCategory} />
                 <ProjectNav
-                    show={this.props.projectNav} />
+                    show={this.state.projectNav} />
                 <FlexboxGrid 
                     justify='space-around' 
-                    style={TRACKER_STYLES.main}>
+                    style={this.state.projectNav ? 
+                        TRACKER_STYLES.mainSideNav : TRACKER_STYLES.mainNoSideNav}>
                     <FlexboxGrid.Item 
                         componentClass={Col} 
                         colspan={24} 
