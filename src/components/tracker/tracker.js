@@ -547,7 +547,7 @@ class TrackerView extends React.Component {
                         size='md'/>
                 </Whisper>
                 <Whisper
-                    placement="bottomEnd"
+                    placement="leftStart"
                     speaker={projectnavspeaker}
                     trigger='hover'>
                     <IconButton 

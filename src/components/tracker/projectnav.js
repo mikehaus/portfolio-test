@@ -1,5 +1,5 @@
 import React from 'react';
-import { Drawer, Nav, Col, Whisper, IconButton, Icon, Popover } from 'rsuite';
+import { Drawer, Nav, Col, Whisper, IconButton, Icon, Popover, Button, Input } from 'rsuite';
 import firebase from '../../firebase';
 
 const PROJECT_NAV_STYLES = {
@@ -33,6 +33,12 @@ const SideNav = ({ active, onSelect, ...props }) => {
             activeKey={active} 
             onSelect={onSelect}
             pullRight>
+            {props.showInput ?
+                <div>
+                    <Nav.Item key='0'>
+                        <Input></Input>
+                    </Nav.Item>
+                </div> : null}
             {projectList.map((project) =>
                 <Nav.Item
                 key={project.id}>
@@ -50,6 +56,7 @@ class ProjectNav extends React.Component {
       this.state = {
         projects: [],
         active: '',
+        showInput: false
       };
       this.handleSelect = this.handleSelect.bind(this);
       this.addProject = this.addProject.bind(this);
@@ -60,6 +67,9 @@ class ProjectNav extends React.Component {
     }
 
     addProject() {
+        this.setState({
+            showInput: !this.state.showInput
+        })
         console.log('clicked add project');
     }
 
@@ -93,7 +103,7 @@ class ProjectNav extends React.Component {
         if (!this.props.show) {
             return (
                 <Whisper
-                    placement="bottomEnd"
+                    placement="left"
                     speaker={addprojectspeaker}
                     trigger='hover'>
                     <IconButton 
@@ -111,7 +121,7 @@ class ProjectNav extends React.Component {
             return (
                 <div>
                     <Whisper
-                        placement="bottomEnd"
+                        placement="left"
                         speaker={addprojectspeaker}
                         trigger='hover'>
                         <IconButton 
@@ -125,6 +135,7 @@ class ProjectNav extends React.Component {
                     appearance="subtle" 
                     reversed 
                     active={active}
+                    showInput={this.state.showInput}
                     projects={this.state.projects} 
                     onSelect={this.handleSelect} 
                     style={PROJECT_NAV_STYLES.main}/>
