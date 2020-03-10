@@ -35,22 +35,16 @@ const TRACKER_STYLES = {
         textAlign: 'center',
         margin: '10px',
     },
-    addTicketBtn: {
-        position: 'fixed',
-        top: '5px',
-        left: '65px',
-        zIndex: 1
-    },
     navBtn: {
         position: 'fixed',
         top: '5px',
         right: '10px',
         zIndex: 1
     },
-    addProjectBtn: {
+    addTicketBtn: {
         position: 'fixed',
-        top: '50px',
-        right: '10px',
+        top: '5px',
+        left: '65px',
         zIndex: 1
     },
     listStyle: {
@@ -87,10 +81,6 @@ const archivespeaker = (
 
 const projectnavspeaker = (
     <Popover title="Show Project Nav" />
-);
-
-const addprojectspeaker = (
-    <Popover title="Add Project" />
 );
 
 /* PanelList is component to list all tickets in a category 
@@ -207,6 +197,7 @@ class TrackerView extends React.Component {
             formOpen: true,
         });
     }
+
 
     // function closes form after close button is pressed
     // Set into if else if because it prevents console error from showing\
@@ -554,16 +545,6 @@ class TrackerView extends React.Component {
                         appearance='primary'
                         color='green'
                         size='md'/>
-                </Whisper>
-                <Whisper
-                    placement="bottomEnd"
-                    speaker={addprojectspeaker}
-                    trigger='hover'>
-                    <IconButton 
-                        style={TRACKER_STYLES.addProjectBtn}
-                        icon={<Icon icon="plus" />} 
-                        appearance='default'
-                        size='xs'/>
                 </Whisper>
                 <Whisper
                     placement="bottomEnd"
