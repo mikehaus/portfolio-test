@@ -1,21 +1,25 @@
 import React from 'react';
-import { Drawer, Nav, Col, Whisper, IconButton, Icon, Popover, Button, Input } from 'rsuite';
+import { Drawer, Nav, Col, Whisper, IconButton, Icon, Popover, Button, Input, InputGroup } from 'rsuite';
 import firebase from '../../firebase';
 
 const PROJECT_NAV_STYLES = {
     main: {
         position: 'fixed',
         zIndex: 1,
-        right: 10,
+        left: 70,
         top: '100px',
         fontSize: '10pt',
     },
     addProjectBtn: {
         position: 'fixed',
         top: '50px',
-        right: '10px',
+        left: '65px',
         zIndex: 1
     },
+    projectNameInput: {
+        width: 150,
+        marginRight: 20
+    }
 }
 
 const addprojectspeaker = (
@@ -23,9 +27,11 @@ const addprojectspeaker = (
 );
 
 
-const SideNav = ({ active, onSelect, ...props }) => {
+const SideNav = ({ active, onSelect, submitNewProject, showInput, ...props }) => {
 
     const projectList = props.projects;
+
+    let keyCount = '0';
 
     return (
         <Nav {...props} 
@@ -33,11 +39,14 @@ const SideNav = ({ active, onSelect, ...props }) => {
             activeKey={active} 
             onSelect={onSelect}
             pullRight>
-            {props.showInput ?
+            {showInput ?
                 <div>
-                    <Nav.Item key='0'>
-                        <Input></Input>
-                    </Nav.Item>
+                    <InputGroup style={PROJECT_NAV_STYLES.projectNameInput}>
+                        <Input />
+                        <InputGroup.Button>
+                            <Icon icon="send" />
+                        </InputGroup.Button>
+                    </InputGroup>
                 </div> : null}
             {projectList.map((project) =>
                 <Nav.Item
@@ -60,6 +69,7 @@ class ProjectNav extends React.Component {
       };
       this.handleSelect = this.handleSelect.bind(this);
       this.addProject = this.addProject.bind(this);
+      this.submitNewProject = this.submitNewProject.bind(this);
     }
 
     handleSelect(activeKey) {
@@ -71,6 +81,10 @@ class ProjectNav extends React.Component {
             showInput: !this.state.showInput
         })
         console.log('clicked add project');
+    }
+
+    submitNewProject = () => {
+        console.log("submitted new project");
     }
 
 
@@ -101,40 +115,27 @@ class ProjectNav extends React.Component {
         const { active } = this.state;
         
         if (!this.props.show) {
-            return (
-                <Whisper
-                    placement="left"
-                    speaker={addprojectspeaker}
-                    trigger='hover'>
-                    <IconButton 
-                        style={PROJECT_NAV_STYLES.addProjectBtn}
-                        icon={<Icon icon="plus" />} 
-                        onClick={this.addProject}
-                        appearance='default'
-                        size='xs'/>
-                </Whisper>
-            )
-            
+            return null;
         }
 
         else {
             return (
                 <div>
                     <Whisper
-                        placement="left"
+                        placement='right'
                         speaker={addprojectspeaker}
                         trigger='hover'>
                         <IconButton 
                             style={PROJECT_NAV_STYLES.addProjectBtn}
                             icon={<Icon icon="plus" />} 
                             onClick={this.addProject}
-                            appearance='default'
+                            appearance='primary'
                             size='xs'/>
                     </Whisper>
                     <SideNav 
-                    appearance="subtle" 
-                    reversed 
+                    appearance="subtle"  
                     active={active}
+                    submitNewProject={this.submitNewProject}
                     showInput={this.state.showInput}
                     projects={this.state.projects} 
                     onSelect={this.handleSelect} 

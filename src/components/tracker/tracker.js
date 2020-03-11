@@ -8,7 +8,7 @@ import firebase from '../../firebase';
  
 const TRACKER_STYLES = {
     mainNoSideNav: {
-        width: '100vw - 65px',
+        width: '95vw - 65px',
         height: '90vh',
         overflowY: 'auto',
         overflowX: 'none',
@@ -20,13 +20,13 @@ const TRACKER_STYLES = {
         padding: '10px',
     },
     mainSideNav: {
-        width: '100vw - 165px',
+        width: '95vw - 100px',
         height: '90vh',
         overflowY: 'auto',
         overflowX: 'none',
         position: 'absolute',
-        left: '65px',
-        right: '100px',
+        left: '165px',
+        right: '10px',
         top: '10px',
         bottom: '100px',
         padding: '10px',
@@ -38,13 +38,13 @@ const TRACKER_STYLES = {
     navBtn: {
         position: 'fixed',
         top: '5px',
-        right: '10px',
+        left: '65px',
         zIndex: 1
     },
     addTicketBtn: {
         position: 'fixed',
         top: '5px',
-        left: '65px',
+        right: '10px',
         zIndex: 1
     },
     listStyle: {
@@ -172,7 +172,7 @@ class TrackerView extends React.Component {
         super(props);
         this.state = {
             formOpen: false,
-            projectNav: false,
+            projectNav: true,
             todo: [],
             started: [],
             completed: [],
@@ -535,7 +535,7 @@ class TrackerView extends React.Component {
         return (
             <div>
                 <Whisper
-                    placement="bottomStart"
+                    placement="leftStart"
                     speaker={addticketspeaker}
                     trigger='hover'>
                     <IconButton 
@@ -547,7 +547,7 @@ class TrackerView extends React.Component {
                         size='md'/>
                 </Whisper>
                 <Whisper
-                    placement="leftStart"
+                    placement="rightStart"
                     speaker={projectnavspeaker}
                     trigger='hover'>
                     <IconButton 
