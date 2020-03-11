@@ -20,12 +20,12 @@ const TRACKER_STYLES = {
         padding: '10px',
     },
     mainSideNav: {
-        width: '95vw - 100px',
+        width: '95vw - 165px',
         height: '90vh',
         overflowY: 'auto',
         overflowX: 'none',
         position: 'absolute',
-        left: '165px',
+        left: '100px',
         right: '10px',
         top: '10px',
         bottom: '100px',
@@ -33,7 +33,11 @@ const TRACKER_STYLES = {
     },
     header: {
         textAlign: 'center',
-        margin: '10px',
+        paddingTop: 10,
+        paddingBottom: 10,
+        marginTop: 10,
+        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+        borderRadius: '5px'
     },
     navBtn: {
         position: 'fixed',
@@ -172,7 +176,7 @@ class TrackerView extends React.Component {
         super(props);
         this.state = {
             formOpen: false,
-            projectNav: true,
+            projectNav: false,
             todo: [],
             started: [],
             completed: [],
