@@ -106,6 +106,12 @@ class ProjectNav extends React.Component {
             this.setState({
                 projects: projectState,
             });
+        }, function(error) {
+            if (error) {
+                console.log('Could not Load Project Data...');
+            } else {
+                console.log('Loaded Data');
+            }
         });
 
     }

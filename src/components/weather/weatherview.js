@@ -7,26 +7,27 @@ import 'react-open-weather/lib/css/ReactWeather.css';
  
 const WEATHER_STYLES = {
     main: {
-        width: '90vw',
-        height: '100vh',
-        overflowY: 'auto',
+        width: '100vw - 56px',
+        height: '90vh',
+        overflowY: 'none',
         overflowX: 'none',
         position: 'absolute',
-        left: 65,
-        right: 50,
+        left: 56,
+        right: 0,
         top: 10,
         bottom: 10,
-        padding: 10,
     },
     table: {
-        position: 'relative',
-        top: '50%',
-        maxWidth: '90%',
-        minWidth: '80%',
+        position: 'absolute',
+        top: '60%',
+        width: '100%',
         height: '10%',
         display: 'block',
-        left: '10px',
-        marginRight: 'auto'
+        left: 0,
+        right: 0
+    },
+    header: {
+        paddingLeft: 20,
     }
 }
 
@@ -125,7 +126,7 @@ class WeatherView extends React.Component {
 
         return (
             <div style={WEATHER_STYLES.main}>
-                <h1>Weather View</h1>
+                <h3 style={WEATHER_STYLES.header}>Weather View</h3>
                     <GoogleApiWrapper updateTable={this.updateTable} />
                     <div style={WEATHER_STYLES.table}>
                         

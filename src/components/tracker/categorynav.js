@@ -5,9 +5,9 @@ const TRACKER_NAV_STYLES = {
     main: {
         position: 'fixed',
         bottom: 0,
-        left: '65px',
-        right: '50px',
-        maxWidth: '95vw',
+        left: '56px',
+        right: '0px',
+        maxWidth: '100vw - 155px',
         minWidth: '80vw',
         height: '50px',
         overflowX: 'auto',

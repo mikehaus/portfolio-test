@@ -13,8 +13,8 @@ const TRACKER_STYLES = {
         overflowY: 'auto',
         overflowX: 'none',
         position: 'absolute',
-        left: '65px',
-        right: '10px',
+        left: '70px',
+        right: '15px',
         top: '10px',
         bottom: '100px',
         padding: '10px',
@@ -25,7 +25,7 @@ const TRACKER_STYLES = {
         overflowY: 'auto',
         overflowX: 'none',
         position: 'absolute',
-        left: '100px',
+        left: '150px',
         right: '10px',
         top: '10px',
         bottom: '100px',
@@ -36,6 +36,9 @@ const TRACKER_STYLES = {
         paddingTop: 10,
         paddingBottom: 10,
         marginTop: 10,
+        marginLeft: 25,
+        marginRight: 25,
+        marginBottom: 15,
         backgroundColor: 'rgba(255, 255, 255, 0.05)',
         borderRadius: '5px'
     },
@@ -52,12 +55,19 @@ const TRACKER_STYLES = {
         zIndex: 1
     },
     listStyle: {
-        marginTop: 10,
+        marginLeft: 10,
+        marginRight: 10
     },
     buttonList: {
-        marginTop: 10,
+        marginTop: 25,
         textAlign: 'center',
         justify: 'space-around'
+    },
+    ticketPanel: {
+        marginLeft: 25,
+        marginRight: 25,
+        marginBottom: 5,
+        marginTop: 5,
     },
 }
 
@@ -103,7 +113,8 @@ function PanelList(props) {
         <Panel  
             key={ticket.id} 
             header={ticket.name}
-            bordered>
+            collapsible
+            style={TRACKER_STYLES.ticketPanel}>
             <p>Description: {ticket.description}</p>
             <p>Priority: {ticket.priority}</p>
             <ButtonToolbar 
@@ -161,7 +172,7 @@ function PanelList(props) {
         </Panel>
     );
     return (
-        <PanelGroup accordion>
+        <PanelGroup>
             {listItems}
         </PanelGroup>
     );
@@ -593,6 +604,7 @@ class TrackerView extends React.Component {
                             tickets={this.state.todo} 
                             left={false} 
                             right={true} />
+                            <Divider />
                     </FlexboxGrid.Item>
                     <FlexboxGrid.Item 
                         componentClass={Col}
@@ -610,6 +622,7 @@ class TrackerView extends React.Component {
                             tickets={this.state.started} 
                             left={true} 
                             right={true} />
+                            <Divider />
                     </FlexboxGrid.Item>
                     <FlexboxGrid.Item 
                         componentClass={Col} 
@@ -628,6 +641,7 @@ class TrackerView extends React.Component {
                             tickets={this.state.completed} 
                             left={true} 
                             right={false} />
+                            <Divider />
                     </FlexboxGrid.Item>
                 </FlexboxGrid>
             </div>

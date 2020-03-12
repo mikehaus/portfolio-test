@@ -3,13 +3,11 @@ import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
 import myKeys from '../../data/apikeys';
  
 const MAP_STYLES = {
-    display: 'block',
-    maxWidth: '95%',
-    minWidth: '60%',
+    position: 'fixed',
+    width: '100%',
     height: '40%',
-    top: 10,
-    marginLeft: '10px',
-    marginRight: '50px',
+    right: 0,
+    top: 50,
 };
 
 
