@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Drawer, Nav, Col, Whisper, IconButton, Icon, Popover, Button, Input, InputGroup } from 'rsuite';
 import firebase from '../../firebase';
 
@@ -9,6 +9,8 @@ const PROJECT_NAV_STYLES = {
         left: 70,
         top: '100px',
         fontSize: '10pt',
+        padding: '10px',
+        backgroundColor: 'RGBA(255, 255, 255, 0.1)',
     },
     addProjectBtn: {
         position: 'fixed',
@@ -33,6 +35,20 @@ const SideNav = ({ active, onSelect, submitNewProject, showInput, ...props }) =>
 
     let keyCount = '0';
 
+    let nameInput = null;
+
+    let nameInputRef = useRef(null);
+
+    function setName() {
+        nameInput = nameInputRef.current.value;
+
+        console.log(nameInputRef.current.value);
+    }
+
+    const submitNewProjectName = () => {
+        console.log(nameInputRef.current.value);
+    }
+
     return (
         <Nav {...props} 
             vertical 
@@ -42,8 +58,8 @@ const SideNav = ({ active, onSelect, submitNewProject, showInput, ...props }) =>
             {showInput ?
                 <div>
                     <InputGroup style={PROJECT_NAV_STYLES.projectNameInput}>
-                        <Input />
-                        <InputGroup.Button>
+                        <Input type='text' ref={ nameInputRef }/>
+                        <InputGroup.Button onClick={submitNewProjectName}>
                             <Icon icon="send" />
                         </InputGroup.Button>
                     </InputGroup>
@@ -83,7 +99,8 @@ class ProjectNav extends React.Component {
         console.log('clicked add project');
     }
 
-    submitNewProject = () => {
+    submitNewProject = (e) => {
+        console.log(e.target.value);
         console.log("submitted new project");
     }
 

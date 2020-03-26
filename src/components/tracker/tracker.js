@@ -64,8 +64,8 @@ const TRACKER_STYLES = {
         justify: 'space-around'
     },
     ticketPanel: {
-        marginLeft: 25,
-        marginRight: 25,
+        marginLeft: 15,
+        marginRight: 15,
         marginBottom: 5,
         marginTop: 5,
     },
