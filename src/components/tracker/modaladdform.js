@@ -100,9 +100,11 @@ class ModalAddForm extends React.Component {
           <div>
             <Modal 
               show={this.props.show} 
-              onHide={this.close} 
+              onHide={this.close}
+              onExited={this.close}
               size="xs">
-              <Modal.Header>
+              <Modal.Header
+                closeButton={false}>
                 <Modal.Title>{this.props.edit ? 'Edit Ticket': 'New Ticket'}</Modal.Title>
               </Modal.Header>
               <Modal.Body>
@@ -116,14 +118,13 @@ class ModalAddForm extends React.Component {
                     this.setState({ formError });
                 }}
                 formValue={this.props.formValue}
-                model={model}
-                >
+                model={model}>
+                
                 <CustomField
                     name="name"
                     label="Name"
                     error={formError.name}
                 />
-
                 <CustomField
                     name="priority"
                     label="Priority"

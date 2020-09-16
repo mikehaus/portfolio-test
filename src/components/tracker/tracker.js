@@ -192,7 +192,14 @@ class TrackerView extends React.Component {
             started: [],
             completed: [],
             edit: false,
-            category: 'frontend'
+            category: 'frontend',
+            formData: {
+                id: '',
+                name: '',
+                description: '',
+                priority: 'Low',
+                category: ''
+            }
         };
         this.addTicket = this.addTicket.bind(this);
         this.closeForm = this.closeForm.bind(this);
@@ -360,15 +367,10 @@ class TrackerView extends React.Component {
     // takes current ticket and moves to archived part of database
     closeTicketAndArchive = (ticket, listname) => {
         let list = this.state.completed;
-
         let index = list.indexOf(ticket);
-
         let entry = ticket;
-
         let entryId = entry.id;
-
         list.splice(index, 1);
-
         let db = firebase.database();
 
         // if list is todo, removes entry from todo db and moves it to started
@@ -450,7 +452,7 @@ class TrackerView extends React.Component {
         })
     }
 
-    // to implement takes info from edited form and processes to edit correct entry
+    // TODO takes info from edited form and processes to edit correct entry
     processFormEdit = (formKey, formID) => {
         console.log(formID);
     }
@@ -462,8 +464,6 @@ class TrackerView extends React.Component {
             category: activeKey
         });
         this.populateViewWithTickets(activeKey);
-
-        
     }
 
 
@@ -577,7 +577,8 @@ class TrackerView extends React.Component {
                     edit={this.state.edit} 
                     close={this.closeForm}
                     formSubmitted={this.processForm}
-                    formSubmitEdit={this.processFormEdit} />
+                    formSubmitEdit={this.processFormEdit}
+                    formData={this.state.formData} />
                 <CategoryNav 
                     activeKey={this.state.category}
                     style={TRACKER_STYLES.categoryNav}
