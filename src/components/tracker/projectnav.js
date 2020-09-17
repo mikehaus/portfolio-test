@@ -25,7 +25,7 @@ const PROJECT_NAV_STYLES = {
 }
 
 const addprojectspeaker = (
-    <Popover title="Add Project" />
+    <Popover title='Add Project' />
 );
 
 
@@ -60,7 +60,7 @@ const SideNav = ({ active, onSelect, submitNewProject, showInput, ...props }) =>
                     <InputGroup style={PROJECT_NAV_STYLES.projectNameInput}>
                         <Input type='text' ref={ nameInputRef }/>
                         <InputGroup.Button onClick={submitNewProjectName}>
-                            <Icon icon="send" />
+                            <Icon icon='send' />
                         </InputGroup.Button>
                     </InputGroup>
                 </div> : null}
@@ -101,7 +101,7 @@ class ProjectNav extends React.Component {
 
     submitNewProject = (e) => {
         console.log(e.target.value);
-        console.log("submitted new project");
+        console.log('submitted new project');
     }
 
 
@@ -150,13 +150,13 @@ class ProjectNav extends React.Component {
                         trigger='hover'>
                         <IconButton 
                             style={PROJECT_NAV_STYLES.addProjectBtn}
-                            icon={<Icon icon="plus" />} 
+                            icon={<Icon icon='plus' />} 
                             onClick={this.addProject}
                             appearance='primary'
                             size='xs'/>
                     </Whisper>
                     <SideNav 
-                    appearance="subtle"  
+                    appearance='subtle'  
                     active={active}
                     submitNewProject={this.submitNewProject}
                     showInput={this.state.showInput}

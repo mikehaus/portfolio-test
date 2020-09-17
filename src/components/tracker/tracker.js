@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlexboxGrid, List, Col, Divider, Button, IconButton, Icon, Popover, Whisper, Panel, PanelGroup, ButtonToolbar } from 'rsuite';
 import { v4 as uuidv4 } from 'uuid';
-import ModalAddForm from './modaladdform';
+import ModalAddForm from './modaladdeditform';
 import CategoryNav from './categorynav';
 import ProjectNav from './projectnav';
 import firebase from '../../firebase';
@@ -73,28 +73,28 @@ const TRACKER_STYLES = {
 
 /* Speaker for popover whisper (Contains title of popover) */
 
+const projectnavspeaker = (
+    <Popover title='Show Project Nav' />
+);
+
 const addticketspeaker = (
-    <Popover title="Add Ticket" />
+    <Popover title='Add Ticket' />
 );
 
 const moveleftspeaker = (
-    <Popover title="Move Ticket to Previous Category" />
+    <Popover title='Move Ticket to Previous Category' />
 );
 
 const moverightspeaker = (
-    <Popover title="Move Ticket to Next Category" />
+    <Popover title='Move Ticket to Next Category' />
 );
 
 const editspeaker = (
-    <Popover title="Edit Ticket" />
+    <Popover title='Edit Ticket' />
 );
 
 const archivespeaker = (
-    <Popover title="Close and Archive Ticket" />
-);
-
-const projectnavspeaker = (
-    <Popover title="Show Project Nav" />
+    <Popover title='Close and Archive Ticket' />
 );
 
 /* PanelList is component to list all tickets in a category 
@@ -103,7 +103,6 @@ const projectnavspeaker = (
 
     It also renders Move buttons according to which list the panel is positioned 
 */
-
 function PanelList(props) {
     const ticketList = props.tickets; 
     let left = props.left;
@@ -121,49 +120,52 @@ function PanelList(props) {
                 style={TRACKER_STYLES.buttonList}>
                 {left ? 
                     <Whisper
-                        placement="bottom"
+                        placement='bottom'
                         speaker={moveleftspeaker}
                         trigger='hover'>
                         <IconButton 
                             onClick={() => {
                                 props.moveLeft('left', ticket, props.listName)}} 
-                            icon={<Icon icon="arrow-left" />} 
-                            color="green"
+                            icon={<Icon icon='arrow-left' />} 
+                            color='cyan'
+                            appearance='ghost'
                             style={TRACKER_STYLES.moveLeft}/> 
                     </Whisper>
                     : null }
                 <Whisper
-                    placement="bottom"
+                    placement='bottom'
                     speaker={editspeaker}
                     trigger='hover'>
                     <Button 
                         onClick={() => {
                             props.editTicket(ticket, props.listName)}} 
-                        color="yellow">
+                        color='yellow'
+                        appearance='ghost'>
                             Edit
                     </Button>
                 </Whisper>
                 {right ?
                     <Whisper
-                        placement="bottom"
+                        placement='bottom'
                         speaker={moverightspeaker}
                         trigger='hover'>
                         <IconButton 
                             onClick={() => {
                                 props.moveRight('right', ticket, props.listName)}} 
-                            icon={<Icon icon="arrow-right" />} 
-                            color="green"/> 
+                            icon={<Icon icon='arrow-right' />}
+                            appearance='ghost'
+                            color='cyan'/> 
                     </Whisper>
                     : null }
                 {!right ?
                     <Whisper
-                        placement="bottom"
+                        placement='bottom'
                         speaker={archivespeaker}
                         trigger='hover'>
                         <Button 
                             onClick={() => {
                                 props.closeTicket(ticket, props.listName)}} 
-                            color="violet"> 
+                            color='violet'> 
                             Close
                         </Button>
                     </Whisper>
@@ -550,24 +552,24 @@ class TrackerView extends React.Component {
         return (
             <div>
                 <Whisper
-                    placement="leftStart"
+                    placement='leftStart'
                     speaker={addticketspeaker}
                     trigger='hover'>
                     <IconButton 
                         style={TRACKER_STYLES.addTicketBtn}
-                        icon={<Icon icon="plus" />} 
+                        icon={<Icon icon='plus' />} 
                         onClick={this.addTicket}
                         appearance='primary'
                         color='green'
                         size='md'/>
                 </Whisper>
                 <Whisper
-                    placement="rightStart"
+                    placement='rightStart'
                     speaker={projectnavspeaker}
                     trigger='hover'>
                     <IconButton 
                         style={TRACKER_STYLES.navBtn}
-                        icon={<Icon icon="bars" />} 
+                        icon={<Icon icon='bars' />} 
                         onClick={this.showProjectNav}
                         appearance='default'
                         size='md'/>
@@ -578,7 +580,8 @@ class TrackerView extends React.Component {
                     close={this.closeForm}
                     formSubmitted={this.processForm}
                     formSubmitEdit={this.processFormEdit}
-                    formData={this.state.formData} />
+                    formValue={this.state.formData}
+                    category={this.state.category} />
                 <CategoryNav 
                     activeKey={this.state.category}
                     style={TRACKER_STYLES.categoryNav}

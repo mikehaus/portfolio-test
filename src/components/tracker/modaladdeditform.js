@@ -31,15 +31,15 @@ class CustomField extends React.PureComponent {
 
 /**** This is a Modal Form Component used within tracker component when user clicks Add Ticket button *****/
 
-class ModalAddForm extends React.Component {
+class ModalAddEditForm extends React.Component {
 
     constructor(props) {
         super(props);
         const formValue = {
-          name: '',
-          priority: 'Low',
-          description: '',
-          category: ''
+          //name: '',
+          //priority: 'Low',
+          //description: '',
+          //category: ''
         };
         this.state = {
             formValue: formValue,
@@ -102,10 +102,12 @@ class ModalAddForm extends React.Component {
               show={this.props.show} 
               onHide={this.close}
               onExited={this.close}
-              size="xs">
+              size='xs'>
               <Modal.Header
                 closeButton={false}>
-                <Modal.Title>{this.props.edit ? 'Edit Ticket': 'New Ticket'}</Modal.Title>
+                <Modal.Title>
+                  {this.props.edit ? 'Edit Ticket': 'New Ticket'}
+                </Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <Form
@@ -121,15 +123,17 @@ class ModalAddForm extends React.Component {
                 model={model}>
                 
                 <CustomField
-                    name="name"
-                    label="Name"
+                    name='name'
+                    label='Name'
                     error={formError.name}
+                    value={this.props.formValue.name}
                 />
                 <CustomField
-                    name="priority"
-                    label="Priority"
+                    name='priority'
+                    label='Priority'
                     accepter={RadioGroup}
                     error={formError.priority}
+                    value={this.props.formValue.priority}
                     inline
                 >
                     <Radio value={'Low'}>Low</Radio>
@@ -137,15 +141,17 @@ class ModalAddForm extends React.Component {
                     <Radio value={'High'}>High</Radio>
                 </CustomField>
                 <CustomField
-                    name="description"
-                    label="Description"
-                    componentClass="textarea"
+                    name='description'
+                    label='Description'
+                    componentClass='textarea'
                     rows={5}
                     error={formError.description}
+                    value={this.props.formValue.description}
                 />
-                <CustomField
-                  name="category"
-                  label="Category"
+                {!this.props.edit ? 
+                  <CustomField
+                  name='category'
+                  label='Category'
                   accepter={SelectPicker}
                   style={{ display: 'inline-block', width: 300 }}
                   data={[
@@ -153,22 +159,22 @@ class ModalAddForm extends React.Component {
                     { label: 'Backend', value: 'backend' },
                     { label: 'API', value: 'api' },
                     { label: 'Testing', value: 'testing' },
-                  ]}
-                />
+                  ]}/> : null
+                }
                 </Form>
               </Modal.Body>
               <Modal.Footer>
                 <Button 
-                  onClick={this.handleSubmit} 
-                  appearance="primary" 
-                  color="green">
-                  Submit
+                  onClick={this.props.close} 
+                  appearance='ghost' 
+                  color='red'>
+                  Cancel
                 </Button>
                 <Button 
-                  onClick={this.props.close} 
-                  appearance="primary" 
-                  color="red">
-                  Cancel
+                  onClick={this.handleSubmit} 
+                  appearance='primary' 
+                  color='green'>
+                  Submit
                 </Button>
               </Modal.Footer>
             </Modal>
@@ -177,4 +183,4 @@ class ModalAddForm extends React.Component {
       }
 }
  
-export default ModalAddForm;
+export default ModalAddEditForm;
