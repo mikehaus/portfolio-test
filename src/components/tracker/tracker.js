@@ -580,6 +580,7 @@ class TrackerView extends React.Component {
                     close={this.closeForm}
                     formSubmitted={this.processForm}
                     formSubmitEdit={this.processFormEdit}
+                    editData={this.state.formData}
                     formValue={this.state.formData}
                     category={this.state.category} />
                 <CategoryNav 

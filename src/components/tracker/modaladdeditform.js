@@ -36,10 +36,10 @@ class ModalAddEditForm extends React.Component {
     constructor(props) {
         super(props);
         const formValue = {
-          //name: '',
-          //priority: 'Low',
-          //description: '',
-          //category: ''
+          name: '',
+          priority: 'Low',
+          description: '',
+          category: ''
         };
         this.state = {
             formValue: formValue,
@@ -60,12 +60,17 @@ class ModalAddEditForm extends React.Component {
           return;
         }
         Alert.success('Success');
-        this.props.formSubmitted(formValue);
+        {!this.props.edit ? 
+          this.props.formSubmitted(formValue) :
+          this.handleEdit();
+        }
         this.props.close();
       }
 
       handleEdit() {
+        console.log('got to handleEdit()')
         const { formValue } = this.state;
+        this.props.close();
         if (!this.form.check()) {
           Alert.error('Please Input all Values!');
           return;
@@ -106,7 +111,9 @@ class ModalAddEditForm extends React.Component {
               <Modal.Header
                 closeButton={false}>
                 <Modal.Title>
-                  {this.props.edit ? 'Edit Ticket': 'New Ticket'}
+                  {this.props.edit ? 
+                  'Edit Ticket' : 
+                  'New Ticket' }
                 </Modal.Title>
               </Modal.Header>
               <Modal.Body>
@@ -126,14 +133,18 @@ class ModalAddEditForm extends React.Component {
                     name='name'
                     label='Name'
                     error={formError.name}
-                    value={this.props.formValue.name}
+                    value={!this.props.edit ?
+                      this.state.formValue.name :
+                      this.props.editData.name }
                 />
                 <CustomField
                     name='priority'
                     label='Priority'
                     accepter={RadioGroup}
                     error={formError.priority}
-                    value={this.props.formValue.priority}
+                    value={!this.props.edit ?
+                      this.state.formValue.priority :
+                      this.props.editData.priority }
                     inline
                 >
                     <Radio value={'Low'}>Low</Radio>
@@ -146,21 +157,24 @@ class ModalAddEditForm extends React.Component {
                     componentClass='textarea'
                     rows={5}
                     error={formError.description}
-                    value={this.props.formValue.description}
+                    value={!this.props.edit ?
+                      this.state.formValue.description :
+                      this.props.editData.description}
                 />
-                {!this.props.edit ? 
-                  <CustomField
-                  name='category'
-                  label='Category'
-                  accepter={SelectPicker}
-                  style={{ display: 'inline-block', width: 300 }}
-                  data={[
-                    { label: 'Frontend', value: 'frontend' },
-                    { label: 'Backend', value: 'backend' },
-                    { label: 'API', value: 'api' },
-                    { label: 'Testing', value: 'testing' },
-                  ]}/> : null
-                }
+                <CustomField
+                name='category'
+                label='Category'
+                accepter={SelectPicker}
+                style={{ display: 'inline-block', width: 300 }}
+                value={!this.props.edit ? 
+                  this.state.formValue.category :
+                  this.props.category}
+                data={[
+                  { label: 'Frontend', value: 'frontend' },
+                  { label: 'Backend', value: 'backend' },
+                  { label: 'API', value: 'api' },
+                  { label: 'Testing', value: 'testing' },
+                ]}/>
                 </Form>
               </Modal.Body>
               <Modal.Footer>
