@@ -70,7 +70,6 @@ class ModalAddEditForm extends React.Component {
       handleEdit() {
         console.log('got to handleEdit()')
         const { formValue } = this.state;
-        this.props.close();
         if (!this.form.check()) {
           Alert.error('Please Input all Values!');
           return;
@@ -126,7 +125,9 @@ class ModalAddEditForm extends React.Component {
                 onCheck={formError => {
                     this.setState({ formError });
                 }}
-                formValue={this.props.formValue}
+                formValue={!this.props.edit ?
+                  this.state.formValue :
+                  this.props.editData}
                 model={model}>
                 
                 <CustomField

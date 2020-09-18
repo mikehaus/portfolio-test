@@ -237,11 +237,15 @@ class TrackerView extends React.Component {
                 }
             });
         }
-
         else {
             this.setState({
                 edit: false,
                 formOpen: false,
+                formData: {
+                    name: '',
+                    priority: 'Low',
+                    description: ''
+                }
             });
         }
     }
@@ -457,6 +461,17 @@ class TrackerView extends React.Component {
     // TODO takes info from edited form and processes to edit correct entry
     processFormEdit = (formKey, formID) => {
         console.log(formID);
+
+        let category = formKey.category;
+
+        let ticket = {
+            name: formKey.name,
+            description: formKey.description,
+            priority: formKey.priority,
+            id: formID
+        }
+
+        console.log(ticket, category)
     }
 
 
