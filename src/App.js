@@ -3,6 +3,7 @@ import TrackerView from './components/tracker/tracker';
 import MainSideBar from './components/mainsidebar';
 import AboutView from './components/about';
 import WeatherView from './components/weather/weatherview';
+import TimerView from './components/timer/timer';
 import firebase from './firebase';
 
 import './App.css';
@@ -15,8 +16,9 @@ class App extends React.Component {
     super();
     this.state = {
       aboutView: false,
-      trackerView: true,
+      trackerView: false,
       weatherView: false,
+      timerView: true,
       db: null,
     };
     this.changeView = this.changeView.bind(this);
@@ -28,22 +30,33 @@ class App extends React.Component {
       this.setState({
         aboutView: true,
         trackerView: false,
-        weatherView: false
+        weatherView: false,
+        timerView: false
       });
     }
     else if (eventKey === '2') {
       this.setState({
         aboutView: false,
         trackerView: true,
-        weatherView: false
+        weatherView: false,
+        timerView: false
       });
     }
     else if (eventKey === '3') {
       this.setState({
         aboutView: false,
         trackerView: false,
-        weatherView: true
+        weatherView: true,
+        timerView: false
       });
+    }
+    else if (eventKey === '4') {
+      this.setState({
+        aboutView: false,
+        trackerView: false,
+        weatherView: false,
+        timerView: true
+      })
     }
   }
 
@@ -60,6 +73,7 @@ class App extends React.Component {
         <AboutView displayed={this.state.aboutView}/>
         <TrackerView db={this.state.db} displayed={this.state.trackerView}/>
         <WeatherView displayed={this.state.weatherView}/>
+        <TimerView displayed={this.state.timerView}/>
       </div>
     );
   }

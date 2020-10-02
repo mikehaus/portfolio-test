@@ -132,7 +132,7 @@ function PanelList(props) {
                             style={TRACKER_STYLES.moveLeft}/> 
                     </Whisper>
                     : null }
-                <Whisper
+                {/*<Whisper
                     placement='bottom'
                     speaker={editspeaker}
                     trigger='hover'>
@@ -143,7 +143,7 @@ function PanelList(props) {
                         appearance='ghost'>
                             Edit
                     </Button>
-                </Whisper>
+                        </Whisper>*/}
                 {right ?
                     <Whisper
                         placement='bottom'

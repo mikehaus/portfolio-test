@@ -3,10 +3,9 @@ import React from 'react';
 const ABOUT_STYLES = {
     main: {
       width: '95vw',
-      height: '110vh',
       overflowY: 'auto',
       overflowX: 'none',
-      position: 'absolute',
+      position: 'fixed',
       left: '65px',
       right: '50px',
       top: '10px',

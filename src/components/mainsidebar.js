@@ -3,7 +3,7 @@ import { Sidenav, Nav, Icon, Divider } from 'rsuite';
 
 const MAINSIDEBAR_STYLES = {
     main: {
-        width: 65,
+        width: 52,
         position: 'fixed',
         height: '100vh',
         display: 'flex',
@@ -17,7 +17,7 @@ class MainSideBar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeKey: '2',
+            activeKey: '4',
         }
         this.handleSelect = this.handleSelect.bind(this);
     }
@@ -52,6 +52,9 @@ class MainSideBar extends React.Component {
                             </Nav.Item>
                             <Nav.Item eventKey="3" icon={<Icon icon="bolt" />}>
                                 Weather Area Forecast
+                            </Nav.Item>
+                            <Nav.Item eventKey="4" icon={<Icon icon="clock-o"/>}>
+                                Pomodoro Timer
                             </Nav.Item>
                         </Nav>
                     </Sidenav.Body>
